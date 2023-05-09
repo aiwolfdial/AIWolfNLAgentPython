@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
 import lib
 import player
 
