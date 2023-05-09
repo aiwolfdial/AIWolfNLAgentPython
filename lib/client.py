@@ -1,8 +1,3 @@
-
-import os
-import errno
-import configparser
-
 import socket
 import lib
 
