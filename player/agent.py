@@ -1,6 +1,3 @@
-import os
-import configparser
-import errno
 import json
 import lib
 
