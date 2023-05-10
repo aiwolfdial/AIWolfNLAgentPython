@@ -36,15 +36,6 @@ class Possessed(player.agent.Agent):
     
     def whisper(self) -> None:
         return super().whisper()
-
-    def guard(self) -> str:
-        data = {"agentIdx":lib.util.random_select(self.alive)}
-
-        return json.dumps(data,separators=(",",":"))
     
     def action(self) -> str:
-
-        if self.request == "GUARD":
-            return self.guard()
-        else:
-            return super().action()
+        return super().action()
