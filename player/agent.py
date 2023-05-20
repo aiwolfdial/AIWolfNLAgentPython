@@ -1,5 +1,7 @@
 import json
-import lib
+from lib import(
+    util
+)
 
 class Agent:
     def __init__(self, config_path:str, name:str) -> None:
@@ -7,13 +9,13 @@ class Agent:
        self.received = []
        self.gameContinue = True
 
-       inifile = lib.util.check_config(config_path=config_path)
+       inifile = util.check_config(config_path=config_path)
        inifile.read(config_path,"UTF-8")
 
        randomTalk = inifile.get("randomTalk","path")
-       _ = lib.util.check_config(randomTalk)
+       _ = util.check_config(randomTalk)
        
-       self.comments = lib.util.read_text(randomTalk)
+       self.comments = util.read_text(randomTalk)
 
     def parse_info(self, receive: str) -> None:
 
@@ -61,10 +63,10 @@ class Agent:
         return self.role
     
     def talk(self) -> str:
-        return lib.util.random_select(self.comments)
+        return util.random_select(self.comments)
 
     def vote(self) -> str:
-        data = {"agentIdx":lib.util.random_select(self.alive)}
+        data = {"agentIdx":util.random_select(self.alive)}
 
         return json.dumps(data,separators=(",",":"))
 
