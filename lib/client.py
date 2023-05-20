@@ -1,12 +1,14 @@
 import socket
-import lib
+from lib import(
+    util
+)
 
 class Client:
 
     def __init__(self, config_path:str) -> None:
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-        inifile = lib.util.check_config(config_path=config_path)
+        inifile = util.check_config(config_path=config_path)
         inifile.read(config_path,"UTF-8")
         self.host = inifile.get("connection","host")
         self.port = int(inifile.get("connection","port"))
@@ -18,7 +20,7 @@ class Client:
     def receive(self) -> str:
         responses = b""
 
-        while not lib.util.is_json_complate(responces=responses):
+        while not util.is_json_complate(responces=responses):
             response = self.socket.recv(self.buffer)
             
             if response == b"":
