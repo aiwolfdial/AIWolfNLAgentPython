@@ -1,6 +1,5 @@
 import player
 import lib
-
 import json
 
 class Seer(player.agent.Agent):
