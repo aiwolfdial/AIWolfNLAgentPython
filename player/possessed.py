@@ -1,7 +1,4 @@
 import player
-import lib
-
-import json
 
 class Possessed(player.agent.Agent):
     def __init__(self, config_path: str, name: str) -> None:
