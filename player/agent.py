@@ -1,21 +1,20 @@
+import configparser
 import json
-from lib import(
-    util
-)
+from lib import util
 
 class Agent:
-    def __init__(self, config_path:str, name:str) -> None:
+    def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
        self.name = name
        self.received = []
        self.gameContinue = True
-
-       inifile = util.check_config(config_path=config_path)
-       inifile.read(config_path,"UTF-8")
 
        randomTalk = inifile.get("randomTalk","path")
        _ = util.check_config(randomTalk)
        
        self.comments = util.read_text(randomTalk)
+    
+    def set_received(self, received:list) -> None:
+        self.received = received
 
     def parse_info(self, receive: str) -> None:
 
@@ -105,6 +104,7 @@ class Agent:
         new_agent.received = self.received
         new_agent.gameContinue = self.gameContinue
         new_agent.comments = self.comments
+        new_agent.received = self.received
 
         # get_info
         new_agent.gameInfo = self.gameInfo

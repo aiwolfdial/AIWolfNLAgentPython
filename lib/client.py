@@ -14,7 +14,7 @@ class Client:
         self.port = int(inifile.get("connection","port"))
         self.buffer = int(inifile.get("connection","buffer"))
 
-    def connet(self) -> None:
+    def connect(self) -> None:
         self.socket.connect((self.host,self.port))
     
     def receive(self) -> str:
