@@ -9,7 +9,7 @@ The server code is https://github.com/aiwolfdial/RandomTalkAgent
 # Usage
 
 ## Run a Single Agent 
-1. Please fill `host` ,`port` ,`name1` in `res/config.ini`.
+1. Please fill `host` ,`port` ,`name1`, `game` in `res/config.ini`.
 host and port should be set to specified locations of the contest server, or your own server if any.
 name1 should be a unique name within other agents.
 game specifies the number of consecutive games to be played.
