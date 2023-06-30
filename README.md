@@ -12,6 +12,7 @@ The server code is https://github.com/aiwolfdial/RandomTalkAgent
 1. Please fill `host` ,`port` ,`name1` in `res/config.ini`.
 host and port should be set to specified locations of the contest server, or your own server if any.
 name1 should be a unique name within other agents.
+game specifies the number of consecutive games to be played.
 
 ・例
 ```
@@ -19,6 +20,9 @@ name1 should be a unique name within other agents.
 host = localhost
 port = 10000
 buffer = 2048
+
+[game]
+num = 1
 
 [agent]
 name1 = kanolab1
@@ -29,7 +33,7 @@ name1 = kanolab1
 <br>
 
 ## Run Mutiple Agents 
-1. Please fill `host` , `port`, `num` (number of agents), num lines of `name`s in config.ini.
+1. Please fill `host` , `port`, `num` (number of agents), `game` (number of consecutive matches), num lines of `name`s in config.ini.
 
 ・例
 ```
@@ -37,6 +41,9 @@ name1 = kanolab1
 host = localhost
 port = 10000
 buffer = 2048
+
+[game]
+num = 1
 
 [agent]
 num = 5
@@ -52,10 +59,11 @@ name5 = kanolab5
 # 使いかた
 
 ## Agent 1体を使用して実行する場合
-1. `res/config.ini`の `host` ,`port` ,`name1`を埋めてください。
+1. `res/config.ini`の `host` ,`port` ,`name1`,`game`を埋めてください。
 host, port は対戦サーバに合わせます。自分でサーバを建てている場合はその設定に、
 大会用対戦サーバであれば指定されたIPアドレスとポートを記入してください。
 name1 にはほかのエージェントと重複しない名前（英数字）を使用してください。
+gameは対戦を連続実行する回数を指定して下さい。
 
 ・例
 ```
@@ -63,6 +71,9 @@ name1 にはほかのエージェントと重複しない名前（英数字）�
 host = localhost
 port = 10000
 buffer = 2048
+
+[game]
+num = 1
 
 [agent]
 name1 = kanolab1
@@ -73,7 +84,7 @@ name1 = kanolab1
 <br>
 
 ## Agent 複数体を同時に使用して実行する場合
-1. config.iniの`host` ,`port` とエージェントの人数`num`、人数分の`name`を埋めてください。
+1. config.iniの`host` ,`port` とエージェントの人数`num`、人数分の`name`, 連続対戦回数`game`を埋めてください。
 
 ・例
 ```
@@ -81,6 +92,9 @@ name1 = kanolab1
 host = localhost
 port = 10000
 buffer = 2048
+
+[game]
+num = 1
 
 [agent]
 num = 5
