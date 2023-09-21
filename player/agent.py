@@ -2,6 +2,7 @@ import json
 from lib import(
     util
 )
+from res.Commands import Command
 
 class Agent:
     def __init__(self, config_path:str, name:str) -> None:
@@ -74,28 +75,28 @@ class Agent:
         pass
 
     def finish(self) -> str:
-        pass
+        self.gameContinue = False
 
     def action(self) -> str:
 
-        if self.request == "INITIALIZE":
+        if Command.is_initialize(request=self.request):
             self.initialize()
-        elif self.request == "NAME":
+        elif Command.is_name(request=self.request):
             return self.get_name()
-        elif self.request == "ROLE":
+        elif Command.is_role(request=self.request):
             return self.get_role()
-        elif self.request == "DAILY_INITIALIZE":
+        elif Command.is_daily_initialize(request=self.request):
             self.daily_initialize()
-        elif self.request == "DAILY_FINISH":
+        elif Command.is_daily_finish(request=self.request):
             self.daily_finish()
-        elif self.request == "TALK":
+        elif Command.is_talk(request=self.request):
             return self.talk()
-        elif self.request == "VOTE":
+        elif Command.is_vote(request=self.request):
             return self.vote()
-        elif self.request == "WHISPER":
+        elif Command.is_whisper(request=self.request):
             self.whisper()
-        elif self.request == "FINISH":
-            self.gameContinue = False
+        elif Command.finish(request=self.request):
+            self.finish()
         
         return ""
     

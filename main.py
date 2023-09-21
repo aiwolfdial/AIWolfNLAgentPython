@@ -1,5 +1,6 @@
 import lib
 import player
+from res.Commands import Command
 
 def main(config_path:str, name:str):
     client = lib.client.Client(config_path=config_path)
@@ -15,7 +16,7 @@ def main(config_path:str, name:str):
         agent.get_info()
         message = agent.action()
 
-        if agent.request == "INITIALIZE":
+        if Command.is_initialize(request=agent.request):
             agent = lib.util.init_role(agent=agent, config_path=config_path, name=name)
 
         if message != "":
