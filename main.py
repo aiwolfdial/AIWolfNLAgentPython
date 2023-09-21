@@ -1,12 +1,11 @@
+import configparser
 import lib
 import player
 from res.Commands import Command
 
-def main(config_path:str, name:str):
-    client = lib.client.Client(config_path=config_path)
-    client.connet()
-
-    agent = player.agent.Agent(config_path=config_path,name=name)
+def main(client:lib.client.Client, inifile:configparser.ConfigParser, received:list, name:str):
+    agent = player.agent.Agent(inifile=inifile,name=name)
+    if received != None: agent.set_received(received=received)
 
     while agent.gameContinue:
 
@@ -22,7 +21,7 @@ def main(config_path:str, name:str):
         if message != "":
             client.send(message=message)
 
-    client.close()
+    return agent.received if len(agent.received) != 0 else None
 
 if __name__ == "__main__":
     config_path = "./res/config.ini"
@@ -30,4 +29,13 @@ if __name__ == "__main__":
     inifile = lib.util.check_config(config_path=config_path)
     inifile.read(config_path,"UTF-8")
 
-    main(config_path=config_path, name=inifile.get("agent","name1"))
+     # connect to server
+    client = lib.client.Client(config_path=config_path)
+    client.connect()
+
+    received = None
+    
+    for _ in range(inifile.getint("game","num")):
+        received = main(client=client, inifile=inifile, received=received, name=inifile.get("agent","name1"))
+
+    client.close()
