@@ -11,10 +11,10 @@ class Client:
         inifile = util.check_config(config_path=config_path)
         inifile.read(config_path,"UTF-8")
         self.host = inifile.get("connection","host")
-        self.port = int(inifile.get("connection","port"))
-        self.buffer = int(inifile.get("connection","buffer"))
+        self.port = inifile.getint("connection","port")
+        self.buffer = inifile.getint("connection","buffer")
 
-    def connet(self) -> None:
+    def connect(self) -> None:
         self.socket.connect((self.host,self.port))
     
     def receive(self) -> str:

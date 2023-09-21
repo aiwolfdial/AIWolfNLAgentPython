@@ -1,8 +1,9 @@
+import configparser
 import player
 
 class Possessed(player.agent.Agent):
-    def __init__(self, config_path: str, name: str) -> None:
-        super().__init__(config_path, name)
+    def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
+        super().__init__(inifile=inifile, name=name)
 
     def parse_info(self, receive: str) -> None:
         return super().parse_info(receive)

@@ -31,15 +31,15 @@ def is_json_complate(responces:bytes) -> bool:
     
     return cnt == 0
 
-def init_role(agent:player.agent.Agent, config_path:str, name:str):
+def init_role(agent:player.agent.Agent, inifile:configparser.ConfigParser, name:str):
     if agent.role == "VILLAGER":
-        new_agent = player.villager.Villager(config_path=config_path, name=name)
+        new_agent = player.villager.Villager(inifile=inifile, name=name)
     elif agent.role == "WEREWOLF":
-        new_agent = player.werewolf.Werewolf(config_path=config_path, name=name)
+        new_agent = player.werewolf.Werewolf(inifile=inifile, name=name)
     elif agent.role == "SEER":
-        new_agent = player.seer.Seer(config_path=config_path, name=name)
+        new_agent = player.seer.Seer(inifile=inifile, name=name)
     elif agent.role == "POSSESSED":
-        new_agent = player.possessed.Possessed(config_path=config_path, name=name)
+        new_agent = player.possessed.Possessed(inifile=inifile, name=name)
 
     agent.hand_over(new_agent=new_agent)
 
