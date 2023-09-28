@@ -4,16 +4,16 @@ import main
 import lib
 
 def execute_game(inifile:configparser.ConfigParser, name:str):
-    # connect to server
-    client = lib.client.Client(config_path=config_path)
-    client.connect()
+    # connect to server or listen client
+    sock = lib.connection.Server(inifile=inifile, name=name) if inifile.getboolean("connection","host_flag") else lib.connection.Client(config_path=config_path)
+    sock.connect()
 
     received = None
 
     for _ in range(inifile.getint("game","num")):
-        received = main.main(client=client, inifile=inifile, received=received, name=name)
+        received = main.main(sock=sock, inifile=inifile, received=received, name=name)
     
-    client.close()
+    sock.close()
 
 if __name__ == "__main__":
     config_path = "./res/config.ini"
