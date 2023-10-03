@@ -53,7 +53,7 @@ class Server(Connection):
     
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.host_ip = "0.0.0.0"
+        self.host_ip = inifile.get("connection-server","ip")
         self.host_port = self.get_host_port(inifile=inifile, name=name)
         self.socket.bind((self.host_ip,self.host_port))
     
