@@ -96,7 +96,7 @@ class Agent:
             return self.vote()
         elif Command.is_whisper(request=self.request):
             self.whisper()
-        elif Command.finish(request=self.request):
+        elif Command.is_finish(request=self.request):
             self.finish()
         
         return ""
