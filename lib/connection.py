@@ -1,5 +1,4 @@
 import socket
-import requests
 import configparser
 from lib import(
     util
@@ -54,9 +53,9 @@ class Server(Connection):
     
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.gip = self.get_gip_addr()
+        self.host_ip = "0.0.0.0"
         self.host_port = self.get_host_port(inifile=inifile, name=name)
-        self.socket.bind((self.gip,self.host_port))
+        self.socket.bind((self.host_ip,self.host_port))
     
     def get_host_port(self, inifile:configparser.ConfigParser, name:str) -> int:
 
@@ -73,14 +72,8 @@ class Server(Connection):
         
         return None
     
-    def get_gip_addr(self):
-        res = requests.get('https://ifconfig.me')
-        return res.text
-    
     def connect(self):
         print("server listening...")
-        print("ip: " + self.gip)
-        print("port: " + str(self.host_port))
         self.socket.listen()
         self.client_socket, self.address = self.socket.accept()
     
