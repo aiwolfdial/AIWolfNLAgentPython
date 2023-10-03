@@ -54,7 +54,6 @@ class Server(Connection):
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
         self.host_ip = inifile.get("connection-server","ip")
-        self.host_ip = socket.gethostbyname(socket.gethostname())
         self.host_port = self.get_host_port(inifile=inifile, name=name)
         self.socket.bind((self.host_ip,self.host_port))
     
@@ -75,7 +74,6 @@ class Server(Connection):
     
     def connect(self):
         print("server listening...")
-        print("host:" + self.host_ip + " port" + str(self.host_port))
         self.socket.listen()
         self.client_socket, self.address = self.socket.accept()
     
