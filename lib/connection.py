@@ -10,11 +10,11 @@ class Connection:
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.buffer = inifile.getint("connection","buffer")
     
-    def receive(self) -> str:
+    def receive(self, socket:socket.socket) -> str:
         responses = b""
 
         while not util.is_json_complate(responces=responses):
-            response = self.socket.recv(self.buffer)
+            response = socket.recv(self.buffer)
             
             if response == b"":
                 raise RuntimeError("socket connection broken")
@@ -23,10 +23,10 @@ class Connection:
 
         return responses.decode("utf-8")
     
-    def send(self, message:str) -> None:
+    def send(self, socket:socket.socket, message:str) -> None:
         message += "\n"
 
-        self.socket.send(message.encode("utf-8"))
+        socket.send(message.encode("utf-8"))
     
     def close(self) -> None:
         self.socket.close()
@@ -42,10 +42,10 @@ class Client(Connection):
         self.socket.connect((self.host,self.port))
     
     def receive(self) -> str:
-        return super().receive()
+        return super().receive(socket=self.socket)
     
     def send(self, message:str) -> None:
-        super().send(message=message)
+        super().send(socket=self.socket, message=message)
 
     def close(self) -> None:
         super().close()
@@ -54,7 +54,7 @@ class Server(Connection):
     
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.gip = self.get_gip_addr()
+        self.gip = "localhost"
         self.host_port = self.get_host_port(inifile=inifile, name=name)
         self.socket.bind((self.gip,self.host_port))
     
@@ -82,13 +82,14 @@ class Server(Connection):
         print("ip: " + self.gip)
         print("port: " + str(self.host_port))
         self.socket.listen()
-        self.socket.accept()
+        self.client_socket, self.address = self.socket.accept()
     
     def receive(self) -> str:
-        return super().receive()
+        return super().receive(self.client_socket)
     
     def send(self, message: str) -> None:
-        return super().send(message)
+        return super().send(socket=self.client_socket,message=message)
     
     def close(self):
+        self.client_socket.close()
         super().close()

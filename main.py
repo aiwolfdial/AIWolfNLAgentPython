@@ -17,7 +17,7 @@ def main(sock:Union[lib.connection.Server,lib.connection.Client], inifile:config
         message = agent.action()
 
         if Command.is_initialize(request=agent.request):
-            agent = lib.util.init_role(agent=agent, config_path=config_path, name=name)
+            agent = lib.util.init_role(agent=agent,inifile=inifile, name=name)
 
         if message != "":
             sock.send(message=message)
