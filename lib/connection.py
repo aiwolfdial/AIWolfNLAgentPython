@@ -54,7 +54,7 @@ class Server(Connection):
     
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.gip = "localhost"
+        self.gip = self.get_gip_addr()
         self.host_port = self.get_host_port(inifile=inifile, name=name)
         self.socket.bind((self.gip,self.host_port))
     
