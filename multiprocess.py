@@ -5,7 +5,7 @@ import lib
 
 def execute_game(inifile:configparser.ConfigParser, name:str):
     # connect to server or listen client
-    sock = lib.connection.Server(inifile=inifile, name=name) if inifile.getboolean("connection","host_flag") else lib.connection.Client(config_path=config_path)
+    sock = lib.connection.Server(inifile=inifile, name=name) if inifile.getboolean("connection","host_flag") else lib.connection.Client(inifile=inifile)
     sock.connect()
 
     received = None
