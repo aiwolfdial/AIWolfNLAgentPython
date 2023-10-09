@@ -73,7 +73,8 @@ class Server(Connection):
         return None
     
     def connect(self):
-        print("server listening...")
+        print("server listening...",end="\t")
+        print("ip:" + self.host_ip + " port:" + str(self.host_port))
         self.socket.listen()
         self.client_socket, self.address = self.socket.accept()
     
