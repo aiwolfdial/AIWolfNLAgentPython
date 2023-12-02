@@ -180,11 +180,11 @@ buffer = 2048
 
 [connection-server]
 ip = 0.0.0.0		; Please write down the address where you would like to wait.
-port1 = 9995		; Please write the port that Agent[01] is listening on
-port2 = 9996		; Please write the port that Agent[02] is listening on
-port3 = 9997		; Please write the port that Agent[03] is listening on
-port4 = 9998		; Please write the port that Agent[04] is listening on
-port5 = 9999		; Please write the port that Agent[05] is listening on
+port1 = 50000		; Please write the port that Agent[01] is listening on
+port2 = 50001		; Please write the port that Agent[02] is listening on
+port3 = 50002		; Please write the port that Agent[03] is listening on
+port4 = 50003		; Please write the port that Agent[04] is listening on
+port5 = 50004		; Please write the port that Agent[05] is listening on
 ```
 
 ## 運営にグローバルIP、待ち受けポートを伝える
