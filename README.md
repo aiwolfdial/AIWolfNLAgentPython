@@ -147,7 +147,7 @@ name4 = kanolab4
 name5 = kanolab5
 ```
 
-2.サーバプログラム実行後、```python3 multiprocess.py```で動作します。
+2.サーバプログラム実行後、```$ python3 multiprocess.py```で動作します。
 
 
 ## 本戦について
