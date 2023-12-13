@@ -31,7 +31,7 @@ if __name__ == "__main__":
     inifile.read(config_path,"UTF-8")
     
     # connect to server or listen client
-    sock = lib.connection.Server(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.Client(inifile=inifile)
+    sock = lib.connection.Server(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.Client(inifile=inifile, name=inifile.get("agent","name1"))
     sock.connect()
 
     received = None
