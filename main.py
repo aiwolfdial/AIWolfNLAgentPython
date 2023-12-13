@@ -31,7 +31,11 @@ if __name__ == "__main__":
     inifile.read(config_path,"UTF-8")
     
     # connect to server or listen client
-    sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile, name=inifile.get("agent","name1"))
+    if inifile.getboolean("connection","ssh_flag"):
+        sock = lib.connection.SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
+    else:
+        sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile)
+    
     sock.connect()
 
     received = None
