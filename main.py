@@ -4,7 +4,7 @@ import lib
 import player
 from res.Commands import Command
 
-def main(sock:Union[lib.connection.Server,lib.connection.Client], inifile:configparser.ConfigParser, received:list, name:str):
+def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str):
     agent = player.agent.Agent(inifile=inifile,name=name)
     if received != None: agent.set_received(received=received)
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     inifile.read(config_path,"UTF-8")
     
     # connect to server or listen client
-    sock = lib.connection.Server(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.Client(inifile=inifile, name=inifile.get("agent","name1"))
+    sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile, name=inifile.get("agent","name1"))
     sock.connect()
 
     received = None
