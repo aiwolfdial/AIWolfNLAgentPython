@@ -36,8 +36,8 @@ class TCPClient(Connection):
 
     def __init__(self, inifile:configparser.ConfigParser) -> None:
         super().__init__(inifile=inifile)
-        self.host = inifile.get("connection-client","host")
-        self.port = inifile.getint("connection-client","port")
+        self.host = inifile.get("tcp-client","host")
+        self.port = inifile.getint("tcp-client","port")
 
     def connect(self) -> None:
         self.socket.connect((self.host,self.port))
@@ -55,22 +55,22 @@ class TCPServer(Connection):
     
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.host_ip = inifile.get("connection-server","ip")
+        self.host_ip = inifile.get("tcp-server","ip")
         self.host_port = self.get_host_port(inifile=inifile, name=name)
         self.socket.bind((self.host_ip,self.host_port))
     
     def get_host_port(self, inifile:configparser.ConfigParser, name:str) -> int:
 
         if name == inifile.get("agent","name1"):
-            return inifile.getint("connection-server","port1")
+            return inifile.getint("tcp-server","port1")
         elif name == inifile.get("agent","name2"):
-            return inifile.getint("connection-server","port2")
+            return inifile.getint("tcp-server","port2")
         elif name == inifile.get("agent","name3"):
-            return inifile.getint("connection-server","port3")
+            return inifile.getint("tcp-server","port3")
         elif name == inifile.get("agent","name4"):
-            return inifile.getint("connection-server","port4")
+            return inifile.getint("tcp-server","port4")
         elif name == inifile.get("agent","name5"):
-            return inifile.getint("connection-server","port5")
+            return inifile.getint("tcp-server","port5")
         
         return None
     
@@ -93,9 +93,9 @@ class TCPServer(Connection):
 class SSHServer(Connection):
     def __init__(self,inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
-        self.ssh_config_path = inifile.get("ssh","config_path")
-        self.ssh_host_name = inifile.get("ssh","host_name")
-        self.ssh_agent_flag = inifile.getboolean("ssh","ssh_agent_flag")
+        self.ssh_config_path = inifile.get("ssh-server","config_path")
+        self.ssh_host_name = inifile.get("ssh-server","host_name")
+        self.ssh_agent_flag = inifile.getboolean("ssh-server","ssh_agent_flag")
         self.ssh_remoteforward_port = self.get_ssh_port(inifile=inifile, name=name)
 
     def get_ssh_port(self, inifile:configparser.ConfigParser, name:str) -> int:
