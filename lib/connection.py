@@ -90,12 +90,14 @@ class TCPServer(Connection):
         self.client_socket.close()
         super().close()
 
+
 class SSHServer(Connection):
     def __init__(self,inifile:configparser.ConfigParser, name:str) -> None:
         super().__init__(inifile=inifile)
         self.ssh_config_path = inifile.get("ssh-server","config_path")
         self.ssh_host_name = inifile.get("ssh-server","host_name")
         self.ssh_agent_flag = inifile.getboolean("ssh-server","ssh_agent_flag")
+        self.timeout = inifile.getint("ssh-server","timeout")
         self.ssh_remoteforward_port = self.get_ssh_port(inifile=inifile, name=name)
 
     def get_ssh_port(self, inifile:configparser.ConfigParser, name:str) -> int:
@@ -133,13 +135,14 @@ class SSHServer(Connection):
         elif self.ssh_agent_flag and len(self.ssh_agent_keys) == 0:
             raise ValueError("SSH agent does not contain any keys or the agent is not running.")
     
-    def connect(self) -> None:
+    def connect(self, remote_foward_flag = True) -> None:
         self.set_ssh_toolkit()
         self.set_ssh_config()
         
-        self.ssh_client.connect(self.config["hostname"], username=self.config["user"], pkey=self.ssh_pkey, key_filename=self.config.get("identityfile"))
+        self.ssh_client.connect(self.config["hostname"], username=self.config["user"], pkey=self.ssh_pkey, key_filename=self.config.get("identityfile"), timeout=self.timeout)
 
-        self.ssh_remote_forward()
+        if remote_foward_flag:
+            self.ssh_remote_forward()
     
     def ssh_remote_forward(self) -> None:
         self.transport = self.ssh_client.get_transport()
