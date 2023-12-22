@@ -1,9 +1,9 @@
 # AIWolfNLAgentPython
 A sample python code of an AIWolf Contest's agent for Natural Language Division.
-The server code is https://github.com/aiwolfdial/RandomTalkAgent
+The server code is [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer)
 
 人狼知能大会自然言語部門向けのPythonサンプルエージェントコードです。
-対戦サーバのコードは https://github.com/aiwolfdial/RandomTalkAgent です。
+対戦サーバのコードは [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer) です。
 英語の説明の後に、同じ内容で日本語の説明があります。
 
 # Overview
@@ -92,6 +92,42 @@ RemoteForward [remote_port4] localhost:[local_port4]
 RemoteForward [remote_port5] localhost:[local_port5]
 ```
 
+## Self-play metho
+1. Configure `res/ssh-config` as follows:
+	```
+	[connection]
+	host_flag = true
+	ssh_flag = false
+
+	(...)
+	
+	[tcp-server]
+	ip = localhost
+	port1 = 50000		; The listening port of Agent[01].
+	port2 = 50001		; The listening port of Agent[02].
+	port3 = 50002		; The listening port of Agent[03].
+	port4 = 50003		; The listening port of Agent[04].
+	port5 = 50004		; The listening port of Agent[05].
+
+	(...)
+
+	[game]
+	num = 2				; Number of consecutive game plays
+
+	[agent]
+	num = 5				; The number of agents.
+	name1 = kanolab1	; The name of Agent[01].
+	name2 = kanolab2	; The name of Agent[02].
+	name3 = kanolab3	; The name of Agent[03].
+	name4 = kanolab4	; The name of Agent[04].
+	name5 = kanolab5	; The name of Agent[05].
+	```
+1. Execute the program with the following command.
+	```
+	$ python3 multiprocess.py
+	```
+1. Launch the battle program.\
+	The battle program is set up for [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer).
 ## How to confirm execution
 Here, we'll explain how participants can verify if their systems are set up to host the match server.**In the future, due to potential changes related to logs and other aspects, please check this section frequently for any updates.**
 
@@ -206,7 +242,44 @@ RemoteForward [remote_port4] localhost:[local_port4]
 RemoteForward [remote_port5] localhost:[local_port5]
 ```
 
-## 実行確認方法
+## 自己対戦方法
+1. `res/ssh-config`を以下のように設定する
+	```
+	[connection]
+	host_flag = true
+	ssh_flag = false
+
+	(...)
+	
+	[tcp-server]
+	ip = localhost
+	port1 = 50000		; Agent[01]の待ち受けポート
+	port2 = 50001		; Agent[02]の待ち受けポート
+	port3 = 50002		; Agent[03]の待ち受けポート
+	port4 = 50003		; Agent[04]の待ち受けポート
+	port5 = 50004		; Agent[05]の待ち受けポート
+
+	(...)
+
+	[game]
+	num = 2				; 連続ゲーム回数
+
+	[agent]
+	num = 5				; Agentの数
+	name1 = kanolab1	; Agent[01]の名前
+	name2 = kanolab2	; Agent[02]の名前
+	name3 = kanolab3	; Agent[03]の名前
+	name4 = kanolab4	; Agent[04]の名前
+	name5 = kanolab5	; Agent[05]の名前
+	```
+1. 以下のコマンドでプログラムを実行する
+	```
+	$ python3 multiprocess.py
+	```
+1. 対戦プログラムを起動する\
+	対戦プログラムは[AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer)に用意してあります。
+
+## 主催者が提供するサーバでの実行確認方法
 ここでは参加者の方々に対戦サーバの待ち受けができているか確認する方法を説明します。**今後、log等の関係でこの部分は変更が行われる可能性が高いため、頻繁にご確認ください**
 
 ### リモートサーバ等、秘密鍵に直接置いていない場所から接続を行う方向け
