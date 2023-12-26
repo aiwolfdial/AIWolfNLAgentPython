@@ -228,7 +228,7 @@ name1 = kanolab1
 `Host`:接続名です。`res/config.ini`の`host_name`と同じにしてください
 `User`:SSH接続を行う際のユーザ名です。こちらは参加登録後、主催者から提供します。
 `IdentityFile`:`res/config.ini`で`ssh_flag = false`の場合に主に使用します。秘密鍵のパスです。
-`RemoteForward [remote_port1] localhost:[local_port1]`: 主催者が提供するするサーバに対するリモートフォワードの設定です。主催者が提供するするサーバの[remote_port*]と参加者の皆様の[local_port*]をフォワーディングします。この1ポートを1エージェントが使用し、対戦サーバと通信を行います。`remote_port*`に関しては参加登録後、主催者が指定するポートを指定してください。
+`RemoteForward [remote_port1] localhost:[local_port1]`: 主催者が提供するするサーバに対するリモートフォワードの設定です。主催者が提供するサーバの[remote_port*]と参加者の皆様の[local_port*]をフォワーディングします。この1ポートを1エージェントが使用し、対戦サーバと通信を行います。`remote_port*`に関しては参加登録後、主催者が指定するポートを指定してください。
 
 ```
 Host aiwolf-server
@@ -243,7 +243,7 @@ RemoteForward [remote_port5] localhost:[local_port5]
 ```
 
 ## 自己対戦方法
-1. `res/ssh-config`を以下のように設定する
+1. `res/config.ini`を以下のように設定する
 	```
 	[connection]
 	host_flag = true
