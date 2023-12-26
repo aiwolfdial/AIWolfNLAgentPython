@@ -1,9 +1,13 @@
 import configparser
 import json
+<<<<<<< HEAD
 from lib import(
     util
 )
 from res.Commands import Command
+=======
+from lib import util
+>>>>>>> origin/main
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
@@ -76,6 +80,7 @@ class Agent:
         pass
 
     def finish(self) -> str:
+<<<<<<< HEAD
         self.gameContinue = False
 
     def action(self) -> str:
@@ -98,6 +103,30 @@ class Agent:
             self.whisper()
         elif Command.is_finish(request=self.request):
             self.finish()
+=======
+        pass
+
+    def action(self) -> str:
+
+        if self.request == "INITIALIZE":
+            self.initialize()
+        elif self.request == "NAME":
+            return self.get_name()
+        elif self.request == "ROLE":
+            return self.get_role()
+        elif self.request == "DAILY_INITIALIZE":
+            self.daily_initialize()
+        elif self.request == "DAILY_FINISH":
+            self.daily_finish()
+        elif self.request == "TALK":
+            return self.talk()
+        elif self.request == "VOTE":
+            return self.vote()
+        elif self.request == "WHISPER":
+            self.whisper()
+        elif self.request == "FINISH":
+            self.gameContinue = False
+>>>>>>> origin/main
         
         return ""
     
