@@ -93,7 +93,7 @@ RemoteForward [remote_port5] localhost:[local_port5]
 ```
 
 ## Self-play metho
-1. Configure `res/ssh-config` as follows:
+1. Configure `res/config.ini` as follows:
 	```
 	[connection]
 	host_flag = true
