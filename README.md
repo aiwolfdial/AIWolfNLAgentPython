@@ -73,13 +73,13 @@ num = 5
 name1 = kanolab1
 ```
 
-## res/ssh-configの設定の説明
-ここではSSH接続の設定を記述します。一般的なsshのconfigの記述方式に従っているため、`res/ssh-config`ではなく、`~/.ssh/config`に記述していただき、`res/config.ini`で`config_path=~/.ssh/config`として頂くことも可能です。
-`Host`:接続名です。`res/config.ini`の`host_name`と同じにしてください
-`User`:SSH接続を行う際のユーザ名です。こちらは参加登録後、主催者から提供します。
-`IdentityFile`:`res/config.ini`で`ssh_flag = false`の場合に主に使用します。秘密鍵のパスです。
-`RemoteForward [remote_port1] localhost:[local_port1]`: 主催者が提供するするサーバに対するリモートフォワードの設定です。主催者が提供するするサーバの[remote_port*]と参加者の皆様の[local_port*]をフォワーディングします。この1ポートを1エージェントが使用し、対戦サーバと通信を行います。`remote_port*`に関しては参加登録後、主催者が指定するポートを指定してください。
+## Explanation of the settings in res/ssh-config.
+Here, you'll describe SSH connection settings. Following the typical format for SSH config, please write it in `~/.ssh/config` rather than `res/ssh-config`. Alternatively, you can specify `config_path=~/.ssh/config` in `res/config.ini`
 
+`Host`: connection name. Please set it the same as host_name in `res/config.ini`
+`User`: username used for SSH connections. This will be provided by the organizer after registration.
+`IdentityFile`:This is primarily used when `ssh_flag = false` in `res/config.ini`. It is the path to the private key
+`RemoteForward [remote_port1] localhost:[local_port1]`: This is the configuration for remote forwarding to the server provided by the organizer. It forwards the [remote_port*] of the organizer's server and the [local_port*] of all participants. Each agent uses one port to communicate with the game server. Regarding remote_port*, please specify the port designated by the organizer after registration.
 ```
 Host aiwolf-server
 HostName [対戦サーバのipアドレス]
