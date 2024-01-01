@@ -3,7 +3,8 @@ A sample python code of an AIWolf Contest's agent for Natural Language Division.
 The server code is [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer)
 
 人狼知能大会自然言語部門向けのPythonサンプルエージェントコードです。
-対戦サーバのコードは [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer) です。
+人狼知能自然言語部門2024国内大会については https://sites.google.com/view/aiwolfdial2024jp に説明があります。先にお読みください。
+対戦接続システムのコードは [AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer) です。
 英語の説明の後に、同じ内容で日本語の説明があります。
 
 # Overview
@@ -156,8 +157,9 @@ $ sh execute.sh
 
 
 # 概要
-昨年度までは主催者が提供する対戦サーバに自身のエージェント5体を接続して頂くことで対戦を自動実行していましたが、予期せぬプログラムの実行エラーや日程調整の兼ね合いが困難なことなどを鑑み、本年度からは参加者の方々に対戦サーバの待ち受けをして頂き主催者がそこに接続をする形で開催することに致しました。
-具体的な方法については後述しますが、主催者が提供するLinuxサーバとSSH接続をして頂き、同時にリモートフォワードして頂く形で対戦サーバの待ち受けをして頂きます。
+運営が提供するLinuxサーバにSSH接続をして頂き、同時にリモートフォワードして頂く形でご自身のエージェントの待ち受けをして頂きます。
+そのうえで、
+※2023年までは主催者が提供する対戦サーバに自身のエージェント5体を接続して頂くことで対戦を自動実行していましたが、予期せぬプログラムの実行エラーや日程調整の兼ね合いが困難なことなどを鑑み、本年度からは参加者の方々に対戦サーバの待ち受けをして頂き主催者がそこに接続をする形で開催することに致しました。
 
 ## 参加登録について
 本年度から主催者が提供するサーバにSSH接続を行って頂く関係で、参加者の皆様の公開鍵が必要となります。
