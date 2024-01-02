@@ -168,11 +168,15 @@ $ sh execute.sh
 ※2023年までは主催者が提供する対戦サーバに自身のエージェント5体を接続して頂くことで対戦を自動実行していましたが、予期せぬプログラムの実行エラーや日程調整の兼ね合いが困難なことなどを鑑み、本年度からは参加者の方々に対戦サーバの待ち受けをして頂き主催者がそこに接続をする形で開催することに致しました。
 
 ## サンプルエージェントコード
-全エージェント共通の動作には`player/agent.py` が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
-村人専用の動作には`player/agent.py`を継承した`player/villager.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
-占い師専用の動作には`player/agent.py`を継承した`player/seer.py`が呼び出されますので、`divine`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
-狂人専用の動作には`player/agent.py`を継承した`player/possessed.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
-人狼専用の動作には`player/agent.py`を継承した`player/werewolf.py`が呼び出されますので、`attack`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
+`全エージェント共通`の動作には`player/agent.py` が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
+
+`村人専用`の動作には`player/agent.py`を継承した`player/villager.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
+
+`占い師専用`の動作には`player/agent.py`を継承した`player/seer.py`が呼び出されますので、`divine`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
+
+`狂人専用`の動作には`player/agent.py`を継承した`player/possessed.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
+
+`人狼専用`の動作には`player/agent.py`を継承した`player/werewolf.py`が呼び出されますので、`attack`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
 
 ## 参加登録について
 公式運営サーバにssh接続するため、参加登録の際には公開鍵を添付してください。
@@ -195,17 +199,28 @@ $ pip install -r res/requirements.txt	# ライブラリのインストール
 ### [connection]
 ※過去のシステムとの互換性設定のため、変更の必要はありません。
 `host_flag`: trueの場合に対戦接続の待ち受けを行います。 falseの場合はゲームサーバへの接続を行います。運営が提供する対戦接続システムの待ち受けを行う際は `host_flag = true`にして下さい。
+
 `ssh_flag`: trueの場合に運営が提供するサーバへSSH接続をプログラムから行います。 falseの場合はSSH接続ではなく2023年以前のようにTCPコネクションを行います。
+
 `buffer`: 対戦サーバとの送受信の際に利用されるバッファサイズです。
 
 ### [ssh-server]
-`config_path`:後述するSSH接続の設定を書いたファイルのパスです。デフォルトでは`res/ssh-config`となっていますが、sshのconfigに書かれた方はそのパスを指定されても問題ありません。
-`host_name`:SSH接続の設定を書いたファイルからどのホストに対する設定を使用するか識別する際に使用します。後述するsshのconfigの`Host`と同じであれば問題ありません。
-`ssh_agent_flag`:trueの場合SSH接続を行う際にssh-agentを使用します。主に、ローカル環境からではなくリモートサーバ等にプログラムがおいてあり、そこから対戦サーバにSSH接続を行いたい方向けの設定です。falseの場合はssh-agentを使用しないので、後述するsshのconfigで`IdentityFile`に秘密鍵のパスを書くようにしてください。主にローカル環境から対戦サーバに接続を行いたい方向けです。
+`config_path`:後述するSSH接続の設定を書いたファイルのパスです。\
+デフォルトでは`res/ssh-config`となっていますが、sshのconfigに書かれた方はそのパスを指定されても問題ありません。
+
+`host_name`:SSH接続の設定を書いたファイルからどのホストに対する設定を使用するか識別する際に使用します。\
+後述する`res/ssh-config`の`Host`と同じであれば問題ありません。
+
+`ssh_agent_flag`:\
+`true`:ssh-agentを使用します。主に、ローカル環境からではなくご自身のリモートサーバ等にプログラムがおいてあるため、プログラムを実行する環境で`秘密鍵を~/.ssh/等に置けない環境の方向け`です。一度ローカルからご自身のリモートサーバへ接続し、そこからさらに主催者が提供するサーバへSSH接続を行いたい方向けの設定です。\
+`false`:場合はssh-agentを使用しません。主にローカル環境等、プログラムを実行する環境で`秘密鍵が~/.ssh/等に置いてある方向け`です。後述するsshのconfigで`IdentityFile`に秘密鍵のパスを書くようにしてください。ローカル環境から直接主催者が提供するサーバへSSH接続を行いたい方向けの設定です。
 
 ### [tcp-client]
 ※過去のシステムとの互換性設定のため、変更の必要はありません。
-`host`:2023年までの接続方式です。後述する`execute.sh`で使用しているため対戦サーバにSSHで接続される場合はデフォルトで設定をしてください。 `ssh_flag=false`かつ`host_flag=false`の時に対戦サーバに接続するTCPクライアントとして動作します。
+
+`host`:2023年までの接続方式です。後述する`execute.sh`で使用しているため対戦サーバにSSHで接続される場合はデフォルトで設定をしてください。 
+
+`ssh_flag=false`かつ`host_flag=false`の時に対戦サーバに接続するTCPクライアントとして動作します。
 
 ### [game]
 `num`:連続で行うゲームの回数です。
@@ -241,10 +256,15 @@ name1 = kanolab1
 
 ## res/ssh-configの設定の説明
 ここではSSH接続の設定を記述します。一般的なsshのconfigの記述方式に従っているため、`res/ssh-config`ではなく、`~/.ssh/config`に記述していただき、`res/config.ini`で`config_path=~/.ssh/config`として頂くことも可能です。
+
 `Host`:接続名です。`res/config.ini`の`host_name`と同じにしてください
+
 `User`:SSH接続を行う際のユーザ名です。こちらは参加登録後、運営から提供します。
+
 `IdentityFile`:`res/config.ini`で`ssh_flag = false`の場合に主に使用します。秘密鍵のパスです。
+
 `RemoteForward [remote_port1] localhost:[local_port1]`: 運営が提供するするサーバに対するリモートフォワードの設定です。運営が提供するサーバの[remote_port*]と参加者の皆様の[local_port*]をフォワーディングします。この1ポートを1エージェントが使用し、対戦接続システムと通信を行います。`remote_port*`に関しては参加登録後、運営が指定するポートを指定してください。
+
 
 ```
 Host aiwolf-server
