@@ -1,4 +1,4 @@
-class Command():
+class AIWolfCommand():
 	initialize = "INITIALIZE"
 	name = "NAME"
 	role = "ROLE"
@@ -10,28 +10,28 @@ class Command():
 	finish = "FINISH"
 
 	def is_initialize(request:str) -> bool:
-		return request == Command.initialize
+		return request == AIWolfCommand.initialize
 	
 	def is_name(request:str) -> bool:
-		return request == Command.name
+		return request == AIWolfCommand.name
 	
 	def is_role(request:str) -> bool:
-		return request == Command.role
+		return request == AIWolfCommand.role
 	
 	def is_daily_initialize(request:str) -> bool:
-		return request == Command.daily_initialize
+		return request == AIWolfCommand.daily_initialize
 	
 	def is_daily_finish(request:str) -> bool:
-		return request == Command.daily_finish
+		return request == AIWolfCommand.daily_finish
 	
 	def is_talk(request:str) -> bool:
-		return request == Command.talk
+		return request == AIWolfCommand.talk
 	
 	def is_vote(request:str) -> bool:
-		return request == Command.vote
+		return request == AIWolfCommand.vote
 	
 	def is_whisper(request:str) -> bool:
-		return request == Command.whisper
+		return request == AIWolfCommand.whisper
 	
 	def is_finish(request:str) -> bool:
-		return request == Command.finish
+		return request == AIWolfCommand.finish

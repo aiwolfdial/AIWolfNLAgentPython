@@ -1,13 +1,7 @@
 import configparser
 import json
-<<<<<<< HEAD
-from lib import(
-    util
-)
-from res.Commands import Command
-=======
 from lib import util
->>>>>>> origin/main
+from lib.AIWolf.commands import AIWolfCommand
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
@@ -80,53 +74,28 @@ class Agent:
         pass
 
     def finish(self) -> str:
-<<<<<<< HEAD
         self.gameContinue = False
 
     def action(self) -> str:
 
-        if Command.is_initialize(request=self.request):
+        if AIWolfCommand.is_initialize(request=self.request):
             self.initialize()
-        elif Command.is_name(request=self.request):
+        elif AIWolfCommand.is_name(request=self.request):
             return self.get_name()
-        elif Command.is_role(request=self.request):
+        elif AIWolfCommand.is_role(request=self.request):
             return self.get_role()
-        elif Command.is_daily_initialize(request=self.request):
+        elif AIWolfCommand.is_daily_initialize(request=self.request):
             self.daily_initialize()
-        elif Command.is_daily_finish(request=self.request):
+        elif AIWolfCommand.is_daily_finish(request=self.request):
             self.daily_finish()
-        elif Command.is_talk(request=self.request):
+        elif AIWolfCommand.is_talk(request=self.request):
             return self.talk()
-        elif Command.is_vote(request=self.request):
+        elif AIWolfCommand.is_vote(request=self.request):
             return self.vote()
-        elif Command.is_whisper(request=self.request):
+        elif AIWolfCommand.is_whisper(request=self.request):
             self.whisper()
-        elif Command.is_finish(request=self.request):
+        elif AIWolfCommand.is_finish(request=self.request):
             self.finish()
-=======
-        pass
-
-    def action(self) -> str:
-
-        if self.request == "INITIALIZE":
-            self.initialize()
-        elif self.request == "NAME":
-            return self.get_name()
-        elif self.request == "ROLE":
-            return self.get_role()
-        elif self.request == "DAILY_INITIALIZE":
-            self.daily_initialize()
-        elif self.request == "DAILY_FINISH":
-            self.daily_finish()
-        elif self.request == "TALK":
-            return self.talk()
-        elif self.request == "VOTE":
-            return self.vote()
-        elif self.request == "WHISPER":
-            self.whisper()
-        elif self.request == "FINISH":
-            self.gameContinue = False
->>>>>>> origin/main
         
         return ""
     
