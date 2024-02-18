@@ -2,4 +2,4 @@
 
 python3 multiprocess.py &
 sleep 3
-python3 ./lib/pre_connection.py
+python3 pre_connection.py
