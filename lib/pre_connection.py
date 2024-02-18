@@ -1,6 +1,6 @@
 import time
-from ... import util
-from ...connection import SSHServer,TCPClient
+from . import util
+from connection import SSHServer,TCPClient
 from sshtunnel import SSHTunnelForwarder
 
 if __name__ == "__main__":
