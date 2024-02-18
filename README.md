@@ -337,8 +337,17 @@ $ ssh -A [host name]
 ### ローカル環境から対戦サーバへ接続を行う方向け
 
 1. `res/config.ini`の設定を行ってください。
+	以下の値は変更を行わないでください。
+	```
+	[tcp-client]
+	host = localhost
+	port = 10001
+	
+	[game]
+	num = 1
+	```
 1. `res/ssh-config`の設定を行ってください。
 1. 最後に以下のコマンドを実行してください
-```
-$ sh execute_pre.sh
-```
+	```
+	$ sh execute_pre.sh
+	```
