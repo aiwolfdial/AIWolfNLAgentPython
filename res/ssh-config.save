@@ -1,9 +1,0 @@
-Host aiwolf-server
-HostNa
-User [user name]
-IdentityFile ~/.ssh/id_rsa
-RemoteForward [remote_port1] localhost:[local_port1]
-RemoteForward [remote_port2] localhost:[local_port2]
-RemoteForward [remote_port3] localhost:[local_port3]
-RemoteForward [remote_port4] localhost:[local_port4]
-RemoteForward [remote_port5] localhost:[local_port5]
