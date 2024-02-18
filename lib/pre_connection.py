@@ -1,5 +1,5 @@
 import time
-from . import util
+import util
 from connection import SSHServer,TCPClient
 from sshtunnel import SSHTunnelForwarder
 
