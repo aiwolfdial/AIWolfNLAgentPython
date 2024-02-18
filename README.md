@@ -340,5 +340,5 @@ $ ssh -A [host name]
 1. `res/ssh-config`の設定を行ってください。
 1. 最後に以下のコマンドを実行してください
 ```
-$ sh execute.sh
+$ sh execute_pre.sh
 ```
