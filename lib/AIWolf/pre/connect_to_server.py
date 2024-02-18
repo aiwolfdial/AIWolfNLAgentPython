@@ -1,11 +1,11 @@
 import time
-import lib
-from lib.connection import SSHServer,TCPClient
+from ... import util
+from ...connection import SSHServer,TCPClient
 from sshtunnel import SSHTunnelForwarder
 
 if __name__ == "__main__":
 	config_path = "./res/config.ini"
-	inifile = lib.util.check_config(config_path=config_path)
+	inifile = util.check_config(config_path=config_path)
 	inifile.read(config_path,"UTF-8")
 	client = SSHServer(inifile=inifile,name=inifile.get("agent","name1"))
 	config = client.read_ssh_config()
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 		config["hostname"],
 		ssh_username=config["user"],
 		local_bind_address=("localhost",10001),
-		remote_bind_address=("127.0.0.1",10001),
+		remote_bind_address=("localhost",10001),
 		allow_agent=True,
 	)
 
