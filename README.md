@@ -316,7 +316,7 @@ RemoteForward [remote_port5] localhost:[local_port5]
 1. 対戦プログラムを起動する\
 	対戦プログラムは[AIWolfNLGameServer](https://github.com/aiwolfdial/AIWolfNLGameServer)に用意してあります。
 
-## 主催者が提供するサーバでの実行確認方法
+## 主催者が提供するサーバでの自己対戦の実行確認方法
 ここでは参加者の方々に対戦サーバの待ち受けができているか確認する方法を説明します。
 
 1. `res/config.ini`の設定を行ってください。
@@ -333,6 +333,20 @@ RemoteForward [remote_port5] localhost:[local_port5]
 1. エージェントが待ち受けているポート番号を運営が提供するするサーバの対戦プログラムに伝える。
 	[AIWolfPreliminaryRun](https://github.com/aiwolfdial/AIWolfPreliminaryRun)の内容に従ってAIWolfPreliminaryRunのプログラムを実行してください。
 
+## 本戦での実行方法
+1. `res/config.ini`の設定を行ってください。
+	以下の値は当日の運営の指示に従い設定してください。
+	```	
+	[game]
+	num = ???
+
+	[agent]
+	num = ???
+	```
+1. エージェントプログラムの実行
+	```
+	$ python3 multiprocess.py
+	```
 
 ## 一部の方向けの情報
 ### 踏み台サーバを経由する等、秘密鍵を参照することができない場所から接続を行う方向け
