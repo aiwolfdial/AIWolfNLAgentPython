@@ -279,6 +279,31 @@ RemoteForward [remote_port4] localhost:[local_port4]
 RemoteForward [remote_port5] localhost:[local_port5]
 ```
 
+### 設定例
+ここでは、以下設定の例で`/res/ssh-config`の記述例を示します。
+
+設定
+```
+参加登録の際に提出した希望ユーザ名: kanolab
+参加登録の際に提出頂した公開鍵に対応する秘密鍵のパス: ~/.ssh/id_rsa
+参加登録の際に運営から指定された公式運営サーバのipアドレス: 0.0.0.0
+参加登録の際に運営から指定されたポート番号: 50000 ~ 50004
+自身の環境にバインドするポート番号: 50100 ~ 50104
+```
+
+設定に沿った場合の`./res/ssh-config`
+```
+Host aiwolf-server
+HostName 0.0.0.0
+User kanolab
+IdentityFile ~/.ssh/id_rsa
+RemoteForward 50000 localhost:50100
+RemoteForward 50001 localhost:50101
+RemoteForward 50002 localhost:50102
+RemoteForward 50003 localhost:50103
+RemoteForward 50004 localhost:50104
+```
+
 ## 自己対戦方法
 1. `res/config.ini`を以下のように設定する
 	```
