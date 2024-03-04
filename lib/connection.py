@@ -158,6 +158,10 @@ class SSHServer(Connection):
     
     def send(self, message: str) -> None:
         return super().send(self.channel, message)
-
+    
     def ssh_close(self) -> None:
         self.ssh_client.close()
+    
+    def close(self) -> None:
+        self.ssh_close()
+        return super().close()
