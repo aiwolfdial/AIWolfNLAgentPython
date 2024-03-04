@@ -29,18 +29,20 @@ if __name__ == "__main__":
 
     inifile = lib.util.check_config(config_path=config_path)
     inifile.read(config_path,"UTF-8")
-    
-    # connect to server or listen client
-    if inifile.getboolean("connection","ssh_flag"):
-        sock = lib.connection.SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
-    else:
-        sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile)
-    
-    sock.connect()
 
-    received = None
+    while inifile.getboolean("connection","keep_connection"):
     
-    for _ in range(inifile.getint("game","num")):
-        received = main(sock=sock, inifile=inifile, received=received, name=inifile.get("agent","name1"))
-    
-    sock.close()
+        # connect to server or listen client
+        if inifile.getboolean("connection","ssh_flag"):
+            sock = lib.connection.SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
+        else:
+            sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile)
+        
+        sock.connect()
+
+        received = None
+        
+        for _ in range(inifile.getint("game","num")):
+            received = main(sock=sock, inifile=inifile, received=received, name=inifile.get("agent","name1"))
+        
+        sock.close()
