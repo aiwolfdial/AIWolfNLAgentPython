@@ -30,7 +30,7 @@ if __name__ == "__main__":
     inifile = lib.util.check_config(config_path=config_path)
     inifile.read(config_path,"UTF-8")
 
-    while inifile.getboolean("connection","keep_connection"):
+    while True:
     
         # connect to server or listen client
         if inifile.getboolean("connection","ssh_flag"):
@@ -46,3 +46,6 @@ if __name__ == "__main__":
             received = main(sock=sock, inifile=inifile, received=received, name=inifile.get("agent","name1"))
         
         sock.close()
+
+        if not inifile.getboolean("connection","keep_connection"):
+            break
