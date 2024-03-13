@@ -5,7 +5,7 @@ import lib
 
 def execute_game(inifile:configparser.ConfigParser, name:str):
 
-    while inifile.getboolean("connection","keep_connection"):
+    while True:
 
         # connect to server or listen client
         if inifile.getboolean("connection","ssh_flag"):
@@ -21,6 +21,9 @@ def execute_game(inifile:configparser.ConfigParser, name:str):
             received = main.main(sock=sock, inifile=inifile, received=received, name=name)
         
         sock.close()
+
+        if not inifile.getboolean("connection","keep_connection"):
+            break
 
 if __name__ == "__main__":
     config_path = "./res/config.ini"
