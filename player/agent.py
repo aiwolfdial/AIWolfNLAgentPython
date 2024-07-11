@@ -1,11 +1,13 @@
 import configparser
 import json
-from timeout_decorator import timeout, TimeoutError
+from timeout_decorator import timeout
+from typing import Callable
 from lib import util
 from lib.AIWolf.commands import AIWolfCommand
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
+       self.time_limit = 1
        self.name = name
        self.received = []
        self.gameContinue = True
@@ -14,6 +16,40 @@ class Agent:
        _ = util.check_config(randomTalk)
        
        self.comments = util.read_text(randomTalk)
+
+    def with_timelimit(func:Callable):
+
+        def _wrapper(self, *args, **keywords):
+            time_limit = 0
+
+            # set time limit
+            if self.time_limit == 0 and keywords.get("time_limit") is None:
+                raise ValueError(func.__name__ + ": time limit is not found")
+            elif self.time_limit == 0:
+                time_limit = keywords.get("time_limit")
+            elif keywords.get("time_limit") is None:
+                time_limit = self.time_limit
+            else:
+                time_limit = min(self.time_limit, keywords.get("time_limit"))
+
+            # define local function
+            @timeout(time_limit)
+            def execute_func(self, *args, **keywords):
+                # execute function
+
+                if len(keywords) == 0:
+                    result = func(self)
+                else:
+                    result = func(self, *args, **keywords)
+
+                return result
+            
+            # call local function
+            result = execute_func(self, *args, **keywords)
+
+            return result
+
+        return _wrapper
     
     def set_received(self, received:list) -> None:
         self.received = received
@@ -57,20 +93,25 @@ class Agent:
     def daily_finish(self) -> None:
         pass
     
+    @with_timelimit
     def get_name(self) -> str:
         return self.name
     
+    @with_timelimit
     def get_role(self) -> str:
         return self.role
     
+    @with_timelimit
     def talk(self) -> str:
         return util.random_select(self.comments)
-
+    
+    @with_timelimit
     def vote(self) -> str:
         data = {"agentIdx":util.random_select(self.alive)}
 
         return json.dumps(data,separators=(",",":"))
-
+    
+    @with_timelimit
     def whisper(self) -> None:
         pass
 
