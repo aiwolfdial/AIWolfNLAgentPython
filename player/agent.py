@@ -1,5 +1,6 @@
 import configparser
 import json
+from timeout_decorator import timeout, TimeoutError
 from lib import util
 from lib.AIWolf.commands import AIWolfCommand
 
