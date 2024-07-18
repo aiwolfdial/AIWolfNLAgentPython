@@ -9,15 +9,15 @@ from lib.AIWolf.commands import AIWolfCommand
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
-       self.time_limit = 1
-       self.name = name
-       self.received = []
-       self.gameContinue = True
+       self.time_limit:float = 1.0
+       self.name:str = name
+       self.received:list = []
+       self.gameContinue:bool = True
 
        randomTalk = inifile.get("randomTalk","path")
        _ = util.check_config(randomTalk)
        
-       self.comments = util.read_text(randomTalk)
+       self.comments:list = util.read_text(randomTalk)
 
     def with_timelimit(func:Callable):
 
