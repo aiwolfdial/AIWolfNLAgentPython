@@ -81,6 +81,7 @@ class Agent:
    
     def initialize(self) -> None:
         self.index = self.gameInfo["agent"]
+        self.time_limit = self.gameSetting["actionTimeout"]
         self.role = self.gameInfo["roleMap"][str(self.index)]
 
     def daily_initialize(self) -> None:
@@ -160,3 +161,4 @@ class Agent:
         # initialize
         new_agent.index = self.index
         new_agent.role = self.role
+        new_agent.time_limit = self.time_limit
