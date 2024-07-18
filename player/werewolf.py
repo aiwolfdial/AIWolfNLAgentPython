@@ -2,6 +2,7 @@ import configparser
 import json
 import player
 import lib
+from player.agent import Agent
 
 class Werewolf(player.agent.Agent):
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
@@ -48,3 +49,6 @@ class Werewolf(player.agent.Agent):
             return self.attack()
         else:
             return super().action()
+    
+    def hand_over(self, new_agent) -> None:
+        return super().hand_over(new_agent)
