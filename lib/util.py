@@ -2,6 +2,7 @@ import os
 import errno
 import configparser
 import random
+import time
 import player
 
 def read_text(path:str):
@@ -52,3 +53,9 @@ def check_config(config_path:str) -> configparser.ConfigParser:
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), config_path)
     
     return configparser.ConfigParser()
+
+def wait(wait_time:int) -> None:
+    start_time = time.time()
+
+    while time.time() - start_time < wait_time:
+        pass

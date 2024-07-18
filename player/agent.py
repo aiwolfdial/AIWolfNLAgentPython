@@ -1,7 +1,8 @@
 import configparser
 import inspect
+import math
 import json
-from timeout_decorator import timeout
+from timeout_decorator import timeout, TimeoutError
 from typing import Callable
 from lib import util
 from lib.AIWolf.commands import AIWolfCommand
@@ -21,12 +22,12 @@ class Agent:
     def with_timelimit(func:Callable):
 
         def _wrapper(self, *args, **keywords):
-            time_limit = 0
+            time_limit:float = 0.0
 
             # set time limit
-            if self.time_limit == 0 and keywords.get("time_limit") is None:
+            if math.isclose(self.time_limit, 0, abs_tol=1e-10)  and keywords.get("time_limit") is None:
                 raise ValueError(func.__name__ + ": time limit is not found")
-            elif self.time_limit == 0:
+            elif math.isclose(self.time_limit, 0, abs_tol=1e-10):
                 time_limit = keywords.get("time_limit")
             elif keywords.get("time_limit") is None:
                 time_limit = self.time_limit
@@ -37,7 +38,6 @@ class Agent:
             @timeout(time_limit)
             def execute_func(self, *args, **keywords):
                 # execute function
-
                 if len(keywords) == 0:
                     result = func(self)
                 else:
@@ -45,8 +45,12 @@ class Agent:
 
                 return result
             
-            # call local function
-            result = execute_func(self, *args, **keywords)
+            try:
+                # call local function
+                result = execute_func(self, *args, **keywords)
+            except TimeoutError as e:
+                print(func.__name__ + " has run out of time.")
+                result = ""
 
             return result
 
@@ -80,9 +84,9 @@ class Agent:
         self.whisperHistory = data["whisperHistory"]
    
     def initialize(self) -> None:
-        self.index = self.gameInfo["agent"]
-        self.time_limit = self.gameSetting["actionTimeout"]
-        self.role = self.gameInfo["roleMap"][str(self.index)]
+        self.index:int = self.gameInfo["agent"]
+        self.time_limit:float = int(self.gameSetting["actionTimeout"])/1000 # ms指定でくるのでsに変換
+        self.role:str = self.gameInfo["roleMap"][str(self.index)]
 
     def daily_initialize(self) -> None:
         self.alive = []
