@@ -28,6 +28,7 @@ class Villager(player.agent.Agent):
         return super().get_role()
     
     def talk(self) -> str:
+        
         return super().talk()
     
     def vote(self) -> str:
