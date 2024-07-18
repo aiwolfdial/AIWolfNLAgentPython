@@ -23,6 +23,7 @@ class Agent:
 
         def _wrapper(self, *args, **keywords):
             time_limit:float = 0.0
+            result:str = ""
 
             # set time limit
             if math.isclose(self.time_limit, 0, abs_tol=1e-10)  and keywords.get("time_limit") is None:
@@ -48,9 +49,8 @@ class Agent:
             try:
                 # call local function
                 result = execute_func(self, *args, **keywords)
-            except TimeoutError as e:
+            except TimeoutError:
                 print(func.__name__ + " has run out of time.")
-                result = ""
 
             return result
 
