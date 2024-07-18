@@ -142,28 +142,21 @@ class Agent:
         
         return ""
     
-    def hand_over(self, prev_agent:"Agent") -> None:
+    def hand_over(self, new_agent) -> None:
+        # __init__
+        new_agent.name = self.name
+        new_agent.received = self.received
+        new_agent.gameContinue = self.gameContinue
+        new_agent.comments = self.comments
+        new_agent.received = self.received
 
-        func_name = set()
-        local_values = set()
+        # get_info
+        new_agent.gameInfo = self.gameInfo
+        new_agent.gameSetting = self.gameSetting
+        new_agent.request = self.request
+        new_agent.talkHistory = self.talkHistory
+        new_agent.whisperHistory = self.whisperHistory
 
-        for method in inspect.getmembers(prev_agent,inspect.ismethod):
-            method_name = method[0]
-            method_value = method[1]
-            func_name.add(method_name)
-
-            for func in inspect.getmembers(method_value,inspect.isfunction):
-                func_value = func[1]
-
-                for code in inspect.getmembers(func_value,inspect.iscode):
-                    code_value = code[1]
-                    # get all local func and variables name
-                    local_values.update(set(code_value.co_names))
-
-        # func and variables - func = variables
-        local_values.difference_update(func_name)
-        
-        # hand over local variables
-        for value_name in local_values:
-            if hasattr(prev_agent,value_name):
-                setattr(self,value_name,getattr(prev_agent,value_name))
+        # initialize
+        new_agent.index = self.index
+        new_agent.role = self.role

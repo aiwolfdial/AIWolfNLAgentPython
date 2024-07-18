@@ -1,5 +1,6 @@
 import configparser
 import player
+from player.agent import Agent
 
 class Possessed(player.agent.Agent):
     def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
@@ -37,3 +38,6 @@ class Possessed(player.agent.Agent):
     
     def action(self) -> str:
         return super().action()
+    
+    def hand_over(self, new_agent) -> None:
+        return super().hand_over(new_agent)
