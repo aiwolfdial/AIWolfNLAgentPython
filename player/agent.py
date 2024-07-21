@@ -6,18 +6,22 @@ from timeout_decorator import timeout, TimeoutError
 from typing import Callable
 from lib import util
 from lib.AIWolf.commands import AIWolfCommand
+from lib.log import LogInfo, AgentLog
 
 class Agent:
-    def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
+    def __init__(self, inifile:configparser.ConfigParser, name:str, log_info:LogInfo, is_hand_over:bool=False):
        self.time_limit:float = 1.0
        self.name:str = name
        self.received:list = []
        self.gameContinue:bool = True
 
-       randomTalk = inifile.get("randomTalk","path")
-       _ = util.check_config(randomTalk)
+       if not is_hand_over:
+           self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
+
+       random_talk_path:str = inifile.get("filePath","random_talk")
+       _ = util.check_config(random_talk_path)
        
-       self.comments:list = util.read_text(randomTalk)
+       self.comments:list = util.read_text(random_talk_path)
 
     def with_timelimit(func:Callable):
 
@@ -154,6 +158,7 @@ class Agent:
         new_agent.gameContinue = self.gameContinue
         new_agent.comments = self.comments
         new_agent.received = self.received
+        new_agent.logger = self.logger
 
         # get_info
         new_agent.gameInfo = self.gameInfo

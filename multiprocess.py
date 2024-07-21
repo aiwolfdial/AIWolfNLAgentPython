@@ -2,8 +2,9 @@ import multiprocessing
 import configparser
 import main
 import lib
+from lib.log import LogInfo
 
-def execute_game(inifile:configparser.ConfigParser, name:str):
+def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 
     while True:
 
@@ -18,7 +19,7 @@ def execute_game(inifile:configparser.ConfigParser, name:str):
         received = None
 
         for _ in range(inifile.getint("game","num")):
-            received = main.main(sock=sock, inifile=inifile, received=received, name=name)
+            received = main.main(sock=sock, inifile=inifile, received=received, name=name, log_info=log_info)
         
         sock.close()
 
@@ -31,10 +32,12 @@ if __name__ == "__main__":
     inifile = lib.util.check_config(config_path=config_path)
     inifile.read(config_path,"UTF-8")
 
+    log_info = LogInfo()
+
     agent_num = int(inifile.get("agent","num"))
 
     print("agent_num:" + str(agent_num))
         
     for i in range(agent_num):
-        process = multiprocessing.Process(name="p" + str(i+1), target=execute_game, args=(inifile, inifile.get("agent","name" + str(i+1))))
+        process = multiprocessing.Process(name="p" + str(i+1), target=execute_game, args=(inifile, inifile.get("agent","name" + str(i+1)),log_info))
         process.start()
