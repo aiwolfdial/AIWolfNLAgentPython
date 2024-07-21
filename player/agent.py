@@ -86,6 +86,8 @@ class Agent:
         self.request = data["request"]
         self.talkHistory = data["talkHistory"]
         self.whisperHistory = data["whisperHistory"]
+
+        self.logger.get_info(get_info=data, request=self.request)
    
     def initialize(self) -> None:
         self.index:int = self.gameInfo["agent"]
