@@ -60,6 +60,25 @@ class Agent:
 
         return _wrapper
     
+    def send_agent_index(func:Callable):
+        
+        def _wrapper(self,*args, **keywords):
+            
+            # execute function
+            if len(keywords) == 0:
+                result:int = func(self)
+            else:
+                result:int = func(self, *args, **keywords)
+
+            if type(result) is not int:
+                raise ValueError("Functions with the send_agent_index decorator must return an int type")
+            
+            data = {"agent":util.index_to_agent_format(agent_index=result)}
+            
+            return json.dumps(data,separators=(",",":"))
+        
+        return _wrapper
+
     def set_received(self, received:list) -> None:
         self.received = received
 
@@ -90,17 +109,19 @@ class Agent:
         self.logger.get_info(get_info=data, request=self.request)
    
     def initialize(self) -> None:
-        self.index:int = self.gameInfo["agent"]
-        self.time_limit:float = int(self.gameSetting["actionTimeout"])/1000 # ms指定でくるのでsに変換
-        self.role:str = self.gameInfo["roleMap"][str(self.index)]
+        self.index:int = util.get_index_from_name(agent_name=self.gameInfo["agent"])
+
+        self.time_limit:float = int(self.gameSetting["actionTimeout"])/1000 # ms -> s
+        self.role:str = self.gameInfo["roleMap"][self.gameInfo["agent"]]
 
     def daily_initialize(self) -> None:
         self.alive = []
 
-        for agent_num in self.gameInfo["statusMap"]:
+        for agent_name in self.gameInfo["statusMap"]:
+            agent_num:int = util.get_index_from_name(agent_name=agent_name)
 
-            if self.gameInfo["statusMap"][agent_num] == "ALIVE" and int(agent_num) != self.index:
-                self.alive.append(int(agent_num))
+            if self.gameInfo["statusMap"][agent_name] == "ALIVE" and agent_num != self.index:
+                self.alive.append(agent_num)
 
     def daily_finish(self) -> None:
         pass
@@ -118,10 +139,9 @@ class Agent:
         return util.random_select(self.comments)
     
     @with_timelimit
-    def vote(self) -> str:
-        data = {"agentIdx":util.random_select(self.alive)}
-
-        return json.dumps(data,separators=(",",":"))
+    @send_agent_index
+    def vote(self) -> int:
+        return util.random_select(self.alive)
     
     @with_timelimit
     def whisper(self) -> None:

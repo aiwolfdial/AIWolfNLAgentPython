@@ -1,9 +1,8 @@
 import configparser
 from lib.log import LogInfo
-import player
 from player.agent import Agent
 
-class Possessed(player.agent.Agent):
+class Possessed(Agent):
     
     def __init__(self, inifile: configparser.ConfigParser, name: str, log_info: LogInfo, is_hand_over: bool = False):
         super().__init__(inifile, name, log_info, is_hand_over)
@@ -32,7 +31,7 @@ class Possessed(player.agent.Agent):
     def talk(self) -> str:
         return super().talk()
     
-    def vote(self) -> str:
+    def vote(self) -> int:
         return super().vote()
     
     def whisper(self) -> None:
