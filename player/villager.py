@@ -1,9 +1,8 @@
 import configparser
 from lib.log import LogInfo
-import player
 from player.agent import Agent
 
-class Villager(player.agent.Agent):
+class Villager(Agent):
     
     def __init__(self, inifile: configparser.ConfigParser, name: str, log_info: LogInfo, is_hand_over: bool = False):
         super().__init__(inifile, name, log_info, is_hand_over)
@@ -29,11 +28,10 @@ class Villager(player.agent.Agent):
     def get_role(self) -> str:
         return super().get_role()
     
-    def talk(self) -> str:
-        
+    def talk(self) -> str:  
         return super().talk()
     
-    def vote(self) -> str:
+    def vote(self) -> int:
         return super().vote()
     
     def whisper(self) -> None:

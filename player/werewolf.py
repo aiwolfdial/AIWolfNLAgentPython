@@ -1,11 +1,9 @@
 import configparser
-import json
+from lib import util
 from lib.log import LogInfo
-import player
-import lib
 from player.agent import Agent
 
-class Werewolf(player.agent.Agent):
+class Werewolf(Agent):
     
     def __init__(self, inifile: configparser.ConfigParser, name: str, log_info: LogInfo, is_hand_over: bool = False):
         super().__init__(inifile, name, log_info, is_hand_over)
@@ -34,16 +32,15 @@ class Werewolf(player.agent.Agent):
     def talk(self) -> str:
         return super().talk()
     
-    def vote(self) -> str:
+    def vote(self) -> int:
         return super().vote()
     
     def whisper(self) -> None:
         return super().whisper()
-
-    def attack(self):
-        data = {"agentIdx":lib.util.random_select(self.alive)}
-
-        return json.dumps(data,separators=(",",":"))
+    
+    @Agent.send_agent_index
+    def attack(self) -> int:
+        return util.random_select(self.alive)
     
     def action(self) -> str:
 

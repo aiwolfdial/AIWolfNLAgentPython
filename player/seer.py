@@ -1,12 +1,9 @@
 import configparser
-import json
-from lib.log import LogInfo
-import player
-import lib
 from lib import util
+from lib.log import LogInfo
 from player.agent import Agent
 
-class Seer(player.agent.Agent):
+class Seer(Agent):
     
     def __init__(self, inifile: configparser.ConfigParser, name: str, log_info: LogInfo, is_hand_over: bool = False):
         super().__init__(inifile, name, log_info, is_hand_over)
@@ -39,16 +36,15 @@ class Seer(player.agent.Agent):
         # util.wait(wait_time=10)
         return super().talk()
     
-    def vote(self) -> str:
+    def vote(self) -> int:
         return super().vote()
     
     def whisper(self) -> None:
         return super().whisper()
-
-    def divine(self) -> str:
-        data = {"agentIdx":lib.util.random_select(self.alive)}
-
-        return json.dumps(data,separators=(",",":"))
+    
+    @Agent.send_agent_index
+    def divine(self) -> int:
+        return util.random_select(self.alive)
     
     def action(self) -> str:
 
