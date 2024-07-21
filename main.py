@@ -1,11 +1,12 @@
 import configparser
 from typing import Union
 import lib
+from lib.log import LogInfo
 import player
 from lib.AIWolf.commands import AIWolfCommand
 
-def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str):
-    agent = player.agent.Agent(inifile=inifile,name=name)
+def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
+    agent = player.agent.Agent(inifile=inifile,name=name,log_info=log_info)
     if received != None: agent.set_received(received=received)
 
     while agent.gameContinue:

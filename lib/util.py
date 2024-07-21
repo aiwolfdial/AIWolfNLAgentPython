@@ -1,8 +1,10 @@
 import os
-import errno
-import configparser
-import random
+import glob
 import time
+import errno
+import random
+import shutil
+import configparser
 import player
 
 def read_text(path:str):
@@ -34,13 +36,13 @@ def is_json_complate(responces:bytes) -> bool:
 
 def init_role(agent:player.agent.Agent, inifile:configparser.ConfigParser, name:str):
     if agent.role == "VILLAGER":
-        new_agent = player.villager.Villager(inifile=inifile, name=name)
+        new_agent = player.villager.Villager(inifile=inifile, name=name, is_hand_over=True)
     elif agent.role == "WEREWOLF":
-        new_agent = player.werewolf.Werewolf(inifile=inifile, name=name)
+        new_agent = player.werewolf.Werewolf(inifile=inifile, name=name, is_hand_over=True)
     elif agent.role == "SEER":
-        new_agent = player.seer.Seer(inifile=inifile, name=name)
+        new_agent = player.seer.Seer(inifile=inifile, name=name, is_hand_over=True)
     elif agent.role == "POSSESSED":
-        new_agent = player.possessed.Possessed(inifile=inifile, name=name)
+        new_agent = player.possessed.Possessed(inifile=inifile, name=name, is_hand_over=True)
     
     agent.hand_over(new_agent=new_agent)
     # new_agent.hand_over(prev_agent=agent)
@@ -53,6 +55,41 @@ def check_config(config_path:str) -> configparser.ConfigParser:
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), config_path)
     
     return configparser.ConfigParser()
+
+def is_file_exists(file_path:str) -> bool:
+		return os.path.isfile(file_path)
+
+def is_directory_exists(directory_path:str) -> bool:
+    return os.path.isdir(directory_path)
+
+def make_directory(directory_path:str) -> None:
+    if not is_directory_exists(directory_path=directory_path):
+        os.mkdir(directory_path)
+
+def delete_file(delete_file_path:str) -> None:
+    
+    if not is_file_exists(log_path=delete_file_path):
+        return
+    
+    os.remove(path=delete_file_path)
+
+def get_directory_files(directory_path:str) -> list:
+    wild_card:str = os.sep + "*"
+
+    if not directory_path.endswith(wild_card):
+        directory_path += wild_card
+
+    return glob.glob(directory_path)
+
+def move_log(current_path:str, next_path:str) -> None:
+    
+    if not is_directory_exists(directory_path=current_path):
+        return
+    
+    if not is_directory_exists(directory_path=next_path):
+        shutil.move(current_path, next_path)
+    else:
+        raise ValueError(next_path + "is alreadly exists")
 
 def wait(wait_time:int) -> None:
     start_time = time.time()

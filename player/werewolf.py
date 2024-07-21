@@ -1,12 +1,14 @@
 import configparser
 import json
+from lib.log import LogInfo
 import player
 import lib
 from player.agent import Agent
 
 class Werewolf(player.agent.Agent):
-    def __init__(self, inifile:configparser.ConfigParser, name:str) -> None:
-        super().__init__(inifile=inifile, name=name)
+    
+    def __init__(self, inifile: configparser.ConfigParser, name: str, log_info: LogInfo, is_hand_over: bool = False):
+        super().__init__(inifile, name, log_info, is_hand_over)
     
     def parse_info(self, receive: str) -> None:
         return super().parse_info(receive)
