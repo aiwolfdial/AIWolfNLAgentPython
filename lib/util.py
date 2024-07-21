@@ -1,4 +1,5 @@
 import os
+import re
 import glob
 import time
 import errno
@@ -91,6 +92,12 @@ def move_log(current_path:str, next_path:str) -> None:
         shutil.move(current_path, next_path)
     else:
         raise ValueError(next_path + "is alreadly exists")
+
+def get_index_from_name(agent_name:str) -> int:
+    return int(re.sub('[a-zA-Z\[\]]', '',agent_name))
+
+def index_to_agent_format(agent_index:int) -> str:
+    return "Agent[{agent_index:0>2d}]".format(agent_index=agent_index)
 
 def wait(wait_time:int) -> None:
     start_time = time.time()
