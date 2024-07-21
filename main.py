@@ -18,7 +18,7 @@ def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:
         message = agent.action()
 
         if AIWolfCommand.is_initialize(request=agent.request):
-            agent = lib.util.init_role(agent=agent,inifile=inifile, name=name)
+            agent = lib.util.init_role(agent=agent,inifile=inifile, name=name, log_info=log_info)
 
         if message != "":
             sock.send(message=message)
