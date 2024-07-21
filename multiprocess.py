@@ -41,8 +41,8 @@ if __name__ == "__main__":
         
     for i in range(agent_num):
         process = multiprocessing.Process(name="p" + str(i+1), target=execute_game, args=(inifile, inifile.get("agent","name" + str(i+1)),log_info))
-        processes.append(processes)
-        process[i].start()
+        processes.append(process)
+        processes[i].start()
     
     for process in processes:
         process.join()
