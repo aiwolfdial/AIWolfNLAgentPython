@@ -31,7 +31,6 @@ class LogInfo():
 	
 	@property
 	def log_num(self) -> int:
-		print("log num")
 		return self.__log_num.value
 	
 	def log_num_increment(self) -> None:
@@ -86,8 +85,6 @@ class AgentLog(Log):
 
 		# set log path
 		current_time = datetime.datetime.now()
-
-		print(agent_name)
 
 		if log_info.log_num%inifile.getint("agent","num") == 0:
 			log_info.game_start_time = current_time
