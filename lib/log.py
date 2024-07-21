@@ -6,7 +6,6 @@ import multiprocessing
 import configparser
 import datetime
 from typing import Optional, Callable
-from ctypes import c_uint
 from . import util
 
 class LogInfo():
