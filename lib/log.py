@@ -6,7 +6,7 @@ import multiprocessing
 import configparser
 import datetime
 from typing import Optional, Callable
-from ctypes import c_wchar_p, c_uint
+from ctypes import c_uint
 from . import util
 
 class LogInfo():
@@ -16,7 +16,7 @@ class LogInfo():
 
 	def __init__(self) -> None:
 		self.__game_start_time = multiprocessing.sharedctypes.Array('c',100)
-		self.__log_num = multiprocessing.Value(c_uint,0)
+		self.__log_num = multiprocessing.Value('i',0)
 	
 	@property
 	def game_start_time(self) -> str:
