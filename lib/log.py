@@ -14,8 +14,10 @@ class LogInfo():
 	encode = "utf-8"
 
 	def __init__(self) -> None:
-		self.__game_start_time = multiprocessing.sharedctypes.Array('c',100)
-		self.__log_num = multiprocessing.Value('i',0)
+		self.__game_start_time:str = multiprocessing.sharedctypes.Array('c',100)
+		self.__log_num:int = multiprocessing.Value('i',0)
+		self.__log_times_num:int = multiprocessing.Value('i',0)
+		self.__log_prepare_done_num:int = multiprocessing.Value('i',0)
 	
 	@property
 	def game_start_time(self) -> str:
@@ -33,8 +35,31 @@ class LogInfo():
 	def log_num(self) -> int:
 		return self.__log_num.value
 	
-	def log_num_increment(self) -> None:
+	def increment_log_num(self) -> None:
 		self.__log_num.value += 1
+
+	@property
+	def log_times_num(self) -> int:
+		return self.__log_times_num.value
+	
+	@log_times_num.setter
+	def log_times_num(self, times:int) -> Optional[ValueError]:
+
+		if type(times) is not int:
+			raise ValueError("times must be a int type")
+		
+		self.__log_times_num.value = times
+	
+	@property
+	def log_prepare_done_num(self) -> int:
+		return self.__log_prepare_done_num.value
+	
+	def increment_log_prepare_done_num(self) -> None:
+		self.__log_prepare_done_num.value += 1
+	
+	def reset_params(self) -> None:
+		self.log_times_num = 0
+		self.__log_prepare_done_num.value = 0
 
 class Log():
 
@@ -91,11 +116,19 @@ class AgentLog(Log):
 		else:
 			current_time = datetime.datetime.strptime(log_info.game_start_time, LogInfo.format)
 
-		log_info.log_num_increment()
+		log_info.increment_log_num()
 
 		self.log_dir_path = log_inifile.get("log","storage_path")
 		self.log_month_day_dir = self.log_dir_path + os.sep + current_time.strftime('%m-%d')
-		self.log_file_path = self.log_month_day_dir + os.sep + current_time.strftime('%H-%M-%S-%f') + "_" + agent_name + ".log"
+
+		if log_info.log_times_num == 0:
+			dir_num:int = len(util.get_directories(path=self.log_month_day_dir)) + 1
+			log_info.log_times_num = dir_num
+		else:
+			dir_num:int = log_info.log_times_num
+
+		self.log_times = self.log_month_day_dir + os.sep + str(dir_num)
+		self.log_file_path = self.log_times + os.sep + current_time.strftime('%H-%M-%S-%f') + "_" + agent_name + ".log"
 
 		# load [log] flags
 		self.log_flag_dict = {}	# key: func_name , value: flag
@@ -106,7 +139,11 @@ class AgentLog(Log):
 		self.prepare_log_dir()
 
 		super().__init__(log_path=self.log_file_path, log_name=agent_name)
-				   
+
+		log_info.increment_log_prepare_done_num()
+
+		if log_info.log_prepare_done_num%inifile.getint("agent","num") == 0: log_info.reset_params()
+
 	def print_header_decorator(func:Callable):
 
 		def _wrapper(self,*args, **keywords):
@@ -135,6 +172,8 @@ class AgentLog(Log):
 		
 		# if log directory is not exist: make log directory
 		util.make_directory(directory_path=self.log_month_day_dir)	
+
+		util.make_directory(directory_path=self.log_times)
 	
 	@print_header_decorator
 	def get_info(self, get_info:map, request:str) -> None:
