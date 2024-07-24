@@ -220,7 +220,7 @@ class AgentLog(Log):
 		self.info(f"Divine: " + util.index_to_agent_format(agent_index=divine_target))
 	
 	@print_header_decorator
-	def divine_result(self, divine_result:str) -> None:
+	def divine_result(self, divine_result:dict) -> None:
 
 		self.info(divine_result)
 	
