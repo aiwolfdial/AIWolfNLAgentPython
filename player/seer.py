@@ -24,24 +24,27 @@ class Seer(Agent):
     def daily_finish(self) -> None:
         return super().daily_finish()
     
+    @Agent.with_timelimit
     def get_name(self) -> str:
-        print("Get Name")
         return super().get_name()
     
+    @Agent.with_timelimit
     def get_role(self) -> str:
         return super().get_role()
     
     @Agent.with_timelimit
     def talk(self) -> str:
-        # util.wait(wait_time=4)
         return super().talk()
     
+    @Agent.with_timelimit
     def vote(self) -> int:
         return super().vote()
     
+    @Agent.with_timelimit
     def whisper(self) -> None:
         return super().whisper()
     
+    @Agent.with_timelimit
     @Agent.send_agent_index
     def divine(self) -> int:
         divine_target:int = util.random_select(self.alive)
