@@ -36,6 +36,17 @@ def is_json_complate(responces:bytes) -> bool:
     
     return cnt == 0
 
+def check_json_missing_part(responces:str) -> int:
+    count = 0
+
+    for word in responces:
+        if word == "{":
+            count += 1
+        elif word == "}":
+            count -= 1
+    
+    return count
+
 def init_role(agent:player.agent.Agent, inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
     if agent.role == "VILLAGER":
         new_agent = player.villager.Villager(inifile=inifile, name=name, log_info=log_info, is_hand_over=True)
