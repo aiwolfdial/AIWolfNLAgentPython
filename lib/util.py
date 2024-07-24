@@ -75,6 +75,13 @@ def delete_file(delete_file_path:str) -> None:
     
     os.remove(path=delete_file_path)
 
+def get_directories(path:str) -> list:
+
+    if not is_directory_exists(directory_path=path):
+        return []
+
+    return [f.name for f in os.scandir(path=path) if f.is_dir()]
+
 def get_directory_files(directory_path:str) -> list:
     wild_card:str = os.sep + "*"
 

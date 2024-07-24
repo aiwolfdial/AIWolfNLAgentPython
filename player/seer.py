@@ -25,7 +25,7 @@ class Seer(Agent):
         return super().daily_finish()
     
     def get_name(self) -> str:
-        # print("Get Name")
+        print("Get Name")
         return super().get_name()
     
     def get_role(self) -> str:
@@ -33,7 +33,7 @@ class Seer(Agent):
     
     @Agent.with_timelimit
     def talk(self) -> str:
-        # util.wait(wait_time=10)
+        util.wait(wait_time=4)
         return super().talk()
     
     def vote(self) -> int:
