@@ -1,0 +1,9 @@
+[log]
+storage_path = ./log/
+get_info = true
+initialize = true
+talk = true
+vote = true
+divine = true
+divine_result = true
+attack = true
