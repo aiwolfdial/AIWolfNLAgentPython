@@ -34,6 +34,12 @@ class Seer(Agent):
     
     @Agent.with_timelimit
     def talk(self) -> str:
+
+        if self.gameInfo is not None and self.gameInfo.get("divineResult") is not None:
+            divine_result:str = self.gameInfo["divineResult"]
+            self.logger.divine_result(divine_result=divine_result)
+            return divine_result
+
         return super().talk()
     
     @Agent.with_timelimit

@@ -96,13 +96,26 @@ class Agent:
             self.received.append(received_list[index])
     
     def get_info(self):
-        data = json.loads(self.received.pop(0))
+        try:
+            test = self.received.pop(0)
+            data = json.loads(test)
+        except:
+            print(test)
+            data = json.loads(test)
 
-        self.gameInfo = data["gameInfo"]
-        self.gameSetting = data["gameSetting"]
+        if data.get("gameInfo") is not None:
+            self.gameInfo = data["gameInfo"]
+        
+        if data.get("gameSetting") is not None:
+            self.gameSetting = data["gameSetting"]
+
+        if data.get("talkHistory") is not None:
+            self.talkHistory = data["talkHistory"]
+        
+        if data.get("whisperHistory") is not None:
+            self.whisperHistory = data["whisperHistory"]
+
         self.request = data["request"]
-        self.talkHistory = data["talkHistory"]
-        self.whisperHistory = data["whisperHistory"]
 
         self.logger.get_info(get_info=data, request=self.request)
    
@@ -185,11 +198,19 @@ class Agent:
         new_agent.logger = self.logger
 
         # get_info
-        new_agent.gameInfo = self.gameInfo
-        new_agent.gameSetting = self.gameSetting
+        if hasattr(self,'gameInfo'):
+            new_agent.gameInfo = self.gameInfo
+        
+        if hasattr(self,'gameSetting'):
+            new_agent.gameSetting = self.gameSetting
+
+        if hasattr(self,'talkHistory'):
+            new_agent.talkHistory = self.talkHistory
+        
+        if hasattr(self,'whisperHistory'):
+            new_agent.whisperHistory = self.whisperHistory
+
         new_agent.request = self.request
-        new_agent.talkHistory = self.talkHistory
-        new_agent.whisperHistory = self.whisperHistory
 
         # initialize
         new_agent.index = self.index
