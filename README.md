@@ -194,6 +194,7 @@ $ pip install -r res/requirements.txt	# ライブラリのインストール
 ```
 
 ## res/config.iniの設定の説明
+まず初めに`config.ini.sample`を`config.ini`にリネームしてください。\
 デフォルトで以下の説明のように設定されていますが、ご自身の用途に合わせて設定を変更してください。
 
 ### [connection]
@@ -258,6 +259,7 @@ name1 = kanolab1
 ```
 
 ## res/ssh-configの設定の説明
+まず初めに`ssh-config.sample`を`ssh-config`にリネームしてください。\
 ここではSSH接続の設定を記述します。一般的なsshのconfigの記述方式に従っているため、`res/ssh-config`ではなく、`~/.ssh/config`に記述していただき、`res/config.ini`で`config_path=~/.ssh/config`として頂くことも可能です。
 
 `Host`:接続名です。`res/config.ini`の`host_name`と同じにしてください
@@ -306,6 +308,39 @@ RemoteForward 50003 localhost:50103
 RemoteForward 50004 localhost:50104
 ```
 
+## res/logの設定の説明
+まず初めに`log.ini.sample`を`log.ini`にリネームしてください。
+
+`storage_path`: エージェントのログを保存するパスの設定です
+
+`get_info`\
+`true`:ゲームサーバから取得したJsonをログに書き込みます。\
+`false`:ログに書きません。
+
+`initialize` = true\
+`true`:initializeリクエストの時にゲームサーバから取得したJsonをログに書き込みます。\
+`false`:ログに書きません。
+
+`talk`\
+`true`:エージェントがゲームサーバに送信した`TALK`の内容ををログに書き込みます。\
+`false`:ログに書きません。
+
+`vote`\
+`true`:エージェントがゲームサーバに送信した`VOTE`の内容ををログに書き込みます。\
+`false`:ログに書きません。
+
+`divine`\
+`true`:エージェントがゲームサーバに送信した`DIVINE`の内容ををログに書き込みます。\
+`false`:ログに書きません。
+
+`divine_result`\
+`true`:ゲームサーバから取得した占いの結果をログに書き込みます。\
+`false`:ログに書きません。
+
+`attack`\
+`true`:エージェントがゲームサーバに送信した`ATTACK`の内容ををログに書き込みます。\
+`false`:ログに書きません。
+
 ## 自己対戦方法
 1. `res/config.ini`を以下のように設定する
 	```
@@ -326,7 +361,7 @@ RemoteForward 50004 localhost:50104
 	(...)
 
 	[game]
-	num = 2				; 連続ゲーム回数
+	num = 1				; 連続ゲーム回数
 
 	[agent]
 	num = 5				; Agentの数
