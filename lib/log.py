@@ -103,7 +103,7 @@ class AgentLog(Log):
 		self.log_flag_dict["initialize"] = log_inifile.getboolean("log","initialize")
 
 		# prepare
-		self.prepare_log()
+		self.prepare_log_dir()
 
 		super().__init__(log_path=self.log_file_path, log_name=agent_name)
 				   
@@ -129,12 +129,12 @@ class AgentLog(Log):
 
 		return _wrapper
 	
-	def prepare_log(self) -> None:
+	def prepare_log_dir(self) -> None:
 		# if log directory is not exist: make log directory
 		util.make_directory(directory_path=self.log_dir_path)
 		
 		# if log directory is not exist: make log directory
-		util.make_directory(directory_path=self.log_month_day_dir)
+		util.make_directory(directory_path=self.log_month_day_dir)	
 	
 	@print_header_decorator
 	def get_info(self, get_info:map, request:str) -> None:
