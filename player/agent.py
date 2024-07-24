@@ -96,6 +96,9 @@ class Agent:
             while count > 0:
                 received_list[index] += "}"
                 count -= 1
+            
+            if received_list[index][0] != "{":
+                received_list[index] = "{" + received_list[index] + "}"
 
             self.received.append(received_list[index])
     
@@ -168,6 +171,7 @@ class Agent:
 
     def finish(self) -> str:
         self.gameContinue = False
+        self.logger.close()
 
     def action(self) -> str:
 
