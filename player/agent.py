@@ -73,9 +73,7 @@ class Agent:
             if type(result) is not int:
                 raise ValueError("Functions with the send_agent_index decorator must return an int type")
             
-            data = {"agent":util.index_to_agent_format(agent_index=result)}
-            
-            return json.dumps(data,separators=(",",":"))
+            return util.index_to_agent_format(agent_index=result)
         
         return _wrapper
 
