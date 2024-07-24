@@ -3,4 +3,5 @@ venv/
 .git
 .vscode
 /log/
+res/*.ini
 res/ssh-config
