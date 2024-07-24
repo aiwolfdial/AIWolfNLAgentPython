@@ -220,6 +220,11 @@ class AgentLog(Log):
 		self.info(f"Divine: " + util.index_to_agent_format(agent_index=divine_target))
 	
 	@print_header_decorator
+	def divine_result(self, divine_result:str) -> None:
+
+		self.info(divine_result)
+	
+	@print_header_decorator
 	def attack(self, attack_target:int) -> None:
 		"""
 			print attack log
