@@ -33,7 +33,7 @@ class Seer(Agent):
     
     @Agent.with_timelimit
     def talk(self) -> str:
-        util.wait(wait_time=4)
+        # util.wait(wait_time=4)
         return super().talk()
     
     def vote(self) -> int:
@@ -44,7 +44,9 @@ class Seer(Agent):
     
     @Agent.send_agent_index
     def divine(self) -> int:
-        return util.random_select(self.alive)
+        divine_target:int = util.random_select(self.alive)
+        self.logger.divine(divine_target=divine_target)
+        return divine_target
     
     def action(self) -> str:
 
