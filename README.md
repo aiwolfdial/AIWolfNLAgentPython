@@ -361,7 +361,7 @@ RemoteForward 50004 localhost:50104
 	(...)
 
 	[game]
-	num = 2				; 連続ゲーム回数
+	num = 1				; 連続ゲーム回数
 
 	[agent]
 	num = 5				; Agentの数
