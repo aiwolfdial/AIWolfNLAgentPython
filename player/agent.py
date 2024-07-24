@@ -87,11 +87,15 @@ class Agent:
         for index in range(len(received_list)):
             received_list[index] = received_list[index].rstrip()
 
-            if received_list[index][0] != "{":
-                received_list[index] = "{" + received_list[index]
+            count = util.check_json_missing_part(responces=received_list[index])
 
-            if received_list[index][-1] != "}":
+            while count < 0:
+                received_list[index] = "{" + received_list[index]
+                count += 1
+            
+            while count > 0:
                 received_list[index] += "}"
+                count -= 1
 
             self.received.append(received_list[index])
     
