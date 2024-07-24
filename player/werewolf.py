@@ -40,7 +40,9 @@ class Werewolf(Agent):
     
     @Agent.send_agent_index
     def attack(self) -> int:
-        return util.random_select(self.alive)
+        attack_target:int = util.random_select(self.alive)
+        self.logger.attack(attack_target=attack_target)
+        return attack_target
     
     def action(self) -> str:
 

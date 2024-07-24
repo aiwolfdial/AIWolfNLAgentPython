@@ -134,6 +134,8 @@ class AgentLog(Log):
 		self.log_flag_dict = {}	# key: func_name , value: flag
 		self.log_flag_dict["get_info"] = log_inifile.getboolean("log","get_info")
 		self.log_flag_dict["initialize"] = log_inifile.getboolean("log","initialize")
+		self.log_flag_dict["talk"] = log_inifile.getboolean("log","talk")
+		self.log_flag_dict["vote"] = log_inifile.getboolean("log","vote")
 
 		# prepare
 		self.prepare_log_dir()
@@ -150,6 +152,7 @@ class AgentLog(Log):
 
 			# check write or not
 			if not self.log_flag_dict.get(func.__name__, True):
+				print(func.__name__)
 				return
 
 			if keywords.get("header") != None:
@@ -193,20 +196,36 @@ class AgentLog(Log):
 		self.info("ROLE:" + role)
 	
 	@print_header_decorator
-	def vote(self, data:map) -> None:
+	def talk(self, comment:str) -> None:
+		"""
+			print talk log
+		"""
+
+		self.info(message=comment)
+
+	@print_header_decorator
+	def vote(self, vote_target:int) -> None:
 		"""
 			print vote log
 		"""
 
-		self.info(data)
+		self.info(f"Vote: " + util.index_to_agent_format(agent_index=vote_target))
 
 	@print_header_decorator
-	def divine(self, data:map) -> None:
+	def divine(self, divine_target:int) -> None:
 		"""
 			print divine log
 		"""
 
-		self.info(data)
+		self.info(f"Divine: " + util.index_to_agent_format(agent_index=divine_target))
+	
+	@print_header_decorator
+	def attack(self, attack_target:int) -> None:
+		"""
+			print attack log
+		"""
+
+		self.info(f"Attack: " + util.index_to_agent_format(agent_index=attack_target))
 	
 	@print_header_decorator
 	def daily_finish(self) -> None:

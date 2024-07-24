@@ -134,12 +134,16 @@ class Agent:
     
     @with_timelimit
     def talk(self) -> str:
-        return util.random_select(self.comments)
+        comment:str = util.random_select(self.comments)
+        self.logger.talk(comment=comment)
+        return comment
     
     @with_timelimit
     @send_agent_index
     def vote(self) -> int:
-        return util.random_select(self.alive)
+        vote_target:int = util.random_select(self.alive)
+        self.logger.vote(vote_target=vote_target)
+        return vote_target
     
     @with_timelimit
     def whisper(self) -> None:
