@@ -5,3 +5,5 @@ venv/
 /log/
 res/*.ini
 res/ssh-config
+*.sh
+connect_to_server.py
