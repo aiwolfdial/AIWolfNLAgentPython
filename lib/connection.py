@@ -154,7 +154,12 @@ class SSHServer(Connection):
         self.channel = self.transport.accept()
     
     def receive(self) -> str:
-        return super().receive(self.channel)
+        result = ""
+
+        while not util.is_include_text(result=result):
+            result = super().receive(self.channel)
+
+        return result
     
     def send(self, message: str) -> None:
         print(message)
