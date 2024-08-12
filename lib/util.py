@@ -36,6 +36,9 @@ def is_json_complate(responces:bytes) -> bool:
     
     return cnt == 0
 
+def is_include_text(result:str) -> bool:
+    return "{" in result
+
 def check_json_missing_part(responces:str) -> int:
     count = 0
 
