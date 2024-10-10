@@ -3,7 +3,7 @@ from typing import Union
 import lib
 from lib.log import LogInfo
 import player
-from lib.AIWolf.commands import AIWolfCommand
+from aiwolf_nlp_common import Action
 
 def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
     agent = player.agent.Agent(inifile=inifile,name=name,log_info=log_info)
@@ -17,7 +17,7 @@ def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:
         agent.get_info()
         message = agent.action()
 
-        if AIWolfCommand.is_initialize(request=agent.request):
+        if Action.is_initialize(request=agent.request):
             agent = lib.util.init_role(agent=agent,inifile=inifile, name=name, log_info=log_info)
 
         if message != "":
