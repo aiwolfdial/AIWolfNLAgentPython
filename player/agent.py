@@ -5,8 +5,8 @@ import json
 from timeout_decorator import timeout, TimeoutError
 from typing import Callable
 from lib import util
-from lib.AIWolf.commands import AIWolfCommand
 from lib.log import LogInfo, AgentLog
+from aiwolf_nlp_common import Action
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str, log_info:LogInfo, is_hand_over:bool=False):
@@ -175,23 +175,23 @@ class Agent:
 
     def action(self) -> str:
 
-        if AIWolfCommand.is_initialize(request=self.request):
+        if Action.is_initialize(request=self.request):
             self.initialize()
-        elif AIWolfCommand.is_name(request=self.request):
+        elif Action.is_name(request=self.request):
             return self.get_name()
-        elif AIWolfCommand.is_role(request=self.request):
+        elif Action.is_role(request=self.request):
             return self.get_role()
-        elif AIWolfCommand.is_daily_initialize(request=self.request):
+        elif Action.is_daily_initialize(request=self.request):
             self.daily_initialize()
-        elif AIWolfCommand.is_daily_finish(request=self.request):
+        elif Action.is_daily_finish(request=self.request):
             self.daily_finish()
-        elif AIWolfCommand.is_talk(request=self.request):
+        elif Action.is_talk(request=self.request):
             return self.talk()
-        elif AIWolfCommand.is_vote(request=self.request):
+        elif Action.is_vote(request=self.request):
             return self.vote()
-        elif AIWolfCommand.is_whisper(request=self.request):
+        elif Action.is_whisper(request=self.request):
             self.whisper()
-        elif AIWolfCommand.is_finish(request=self.request):
+        elif Action.is_finish(request=self.request):
             self.finish()
         
         return ""
