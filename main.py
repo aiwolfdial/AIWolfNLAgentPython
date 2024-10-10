@@ -3,6 +3,7 @@ from typing import Union
 import lib
 from lib.log import LogInfo
 import player
+from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
 
 def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
@@ -28,8 +29,7 @@ def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:
 if __name__ == "__main__":
     config_path = "./res/config.ini"
 
-    inifile = lib.util.check_config(config_path=config_path)
-    inifile.read(config_path,"UTF-8")
+    inifile = util.read_config_file(config_file_path=config_path)
 
     while True:
     
