@@ -1,7 +1,7 @@
 __pycache__/
 venv/
 .git
-.vscode
+.vscode/
 /log/
 res/*.ini
 res/ssh-config
