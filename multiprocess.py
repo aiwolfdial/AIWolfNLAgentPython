@@ -3,6 +3,7 @@ import configparser
 import main
 import lib
 from lib.log import LogInfo
+from aiwolf_nlp_common import util
 
 def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 
@@ -29,8 +30,7 @@ def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 if __name__ == "__main__":
     config_path = "./res/config.ini"
     
-    inifile = lib.util.check_config(config_path=config_path)
-    inifile.read(config_path,"UTF-8")
+    inifile = util.read_config_file(config_file_path=config_path)
 
     log_info = LogInfo()
 

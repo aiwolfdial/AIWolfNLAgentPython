@@ -4,24 +4,21 @@ import math
 import json
 from timeout_decorator import timeout, TimeoutError
 from typing import Callable
-from lib import util
 from lib.log import LogInfo, AgentLog
 from aiwolf_nlp_common import Action
+from aiwolf_nlp_common import util
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str, log_info:LogInfo, is_hand_over:bool=False):
-       self.time_limit:float = 1.0
-       self.name:str = name
-       self.received:list = []
-       self.gameContinue:bool = True
-
-       if not is_hand_over:
-           self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
-
-       random_talk_path:str = inifile.get("filePath","random_talk")
-       _ = util.check_config(random_talk_path)
-       
-       self.comments:list = util.read_text(random_talk_path)
+        self.time_limit:float = 1.0
+        self.name:str = name
+        self.received:list = []
+        self.gameContinue:bool = True
+        
+        if not is_hand_over:
+            self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
+        
+        self.comments:list = util.read_text_file(text_file_path=inifile.get("filePath","random_talk"))
 
     def with_timelimit(func:Callable):
 
