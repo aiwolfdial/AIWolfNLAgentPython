@@ -10,7 +10,7 @@ def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 
     while True:
 
-        sock = Connection.get_socket(inifile=inifile)
+        sock = util.get_socket(inifile=inifile)
         sock.connect()
 
         received = None
