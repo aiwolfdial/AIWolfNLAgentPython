@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     while True:
 
-        sock = Connection.get_socket(inifile=inifile)
+        sock = util.get_socket(inifile=inifile)
         sock.connect()
 
         received = None
