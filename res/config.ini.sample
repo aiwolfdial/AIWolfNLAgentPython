@@ -1,6 +1,7 @@
 [connection]
-host_flag = true
-ssh_flag = true
+is_host = true
+websocket = false
+ssh = true
 buffer = 2048
 keep_connection = false
 
