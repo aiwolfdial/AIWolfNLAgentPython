@@ -5,7 +5,6 @@ from lib.log import LogInfo
 import player
 from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
-from aiwolf_nlp_common.connection import Connection
 from aiwolf_nlp_common.connection.tcp import(
     TCPClient,
     TCPServer
@@ -40,7 +39,7 @@ if __name__ == "__main__":
 
     while True:
 
-        sock = util.get_socket(inifile=inifile)
+        sock = util.get_socket(inifile=inifile, name=inifile.get("agent","name1"))
         sock.connect()
 
         received = None
