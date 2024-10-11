@@ -5,16 +5,15 @@ from lib.log import LogInfo
 import player
 from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
-from aiwolf_nlp_common.connection import(
-    Connection,
-    SSHServer
-)
+from aiwolf_nlp_common.connection import Connection
 from aiwolf_nlp_common.connection.tcp import(
     TCPClient,
     TCPServer
 )
+from aiwolf_nlp_common.connection.ssh import SSHServer
+from aiwolf_nlp_common.connection.websocket import WebSocketClient
 
-def main(sock:Union[TCPServer,TCPClient, SSHServer], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
+def main(sock:Union[TCPServer,TCPClient, SSHServer, WebSocketClient], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
     agent = player.agent.Agent(inifile=inifile,name=name,log_info=log_info)
     if received != None: agent.set_received(received=received)
 
