@@ -2,6 +2,7 @@ import configparser
 from lib import util
 from lib.log import LogInfo
 from player.agent import Agent
+from aiwolf_nlp_common import Action
 
 class Werewolf(Agent):
     
@@ -52,7 +53,7 @@ class Werewolf(Agent):
     
     def action(self) -> str:
 
-        if self.request == "ATTACK":
+        if Action.is_attack(request=self.protocol.request):
             return self.attack()
         else:
             return super().action()
