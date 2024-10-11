@@ -2,6 +2,7 @@ import configparser
 from lib import util
 from lib.log import LogInfo
 from player.agent import Agent
+from aiwolf_nlp_common import Action
 
 class Seer(Agent):
     
@@ -35,10 +36,9 @@ class Seer(Agent):
     @Agent.with_timelimit
     def talk(self) -> str:
 
-        if self.gameInfo is not None and self.gameInfo.get("divineResult") is not None:
-            divine_result:str = self.gameInfo["divineResult"]
-            self.logger.divine_result(divine_result=divine_result)
-            return divine_result.get("result")
+        if self.protocol.is_set_game_info() and self.protocol.game_info.is_set_divine_result():
+            self.logger.divine_result(divine_result=self.protocol.game_info.divine_result.result)
+            return self.protocol.game_info.divine_result.result
 
         return super().talk()
     
@@ -59,7 +59,7 @@ class Seer(Agent):
     
     def action(self) -> str:
 
-        if self.request == "DIVINE":
+        if Action.is_divine(request=self.protocol.request):
             return self.divine()
         else:
             return super().action()

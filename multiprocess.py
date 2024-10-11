@@ -1,9 +1,13 @@
 import multiprocessing
 import configparser
 import main
-import lib
 from lib.log import LogInfo
 from aiwolf_nlp_common import util
+from aiwolf_nlp_common.connection import(
+    TCPClient,
+    TCPServer,
+    SSHServer
+)
 
 def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 
@@ -11,9 +15,9 @@ def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
 
         # connect to server or listen client
         if inifile.getboolean("connection","ssh_flag"):
-            sock = lib.connection.SSHServer(inifile=inifile, name=name)
+            sock = SSHServer(inifile=inifile, name=name)
         else:
-            sock = lib.connection.TCPServer(inifile=inifile, name=name) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile)
+            sock = TCPServer(inifile=inifile, name=name) if inifile.getboolean("connection","host_flag") else TCPClient(inifile=inifile)
         
         sock.connect()
 

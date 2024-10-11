@@ -5,8 +5,13 @@ from lib.log import LogInfo
 import player
 from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
+from aiwolf_nlp_common.connection import(
+    TCPClient,
+    TCPServer,
+    SSHServer
+)
 
-def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
+def main(sock:Union[TCPServer,TCPClient, SSHServer], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
     agent = player.agent.Agent(inifile=inifile,name=name,log_info=log_info)
     if received != None: agent.set_received(received=received)
 
@@ -18,7 +23,7 @@ def main(sock:Union[lib.connection.TCPServer,lib.connection.TCPClient], inifile:
         agent.get_info()
         message = agent.action()
 
-        if Action.is_initialize(request=agent.request):
+        if Action.is_initialize(request=agent.protocol.request):
             agent = lib.util.init_role(agent=agent,inifile=inifile, name=name, log_info=log_info)
 
         if message != "":
@@ -35,9 +40,9 @@ if __name__ == "__main__":
     
         # connect to server or listen client
         if inifile.getboolean("connection","ssh_flag"):
-            sock = lib.connection.SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
+            sock = SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
         else:
-            sock = lib.connection.TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else lib.connection.TCPClient(inifile=inifile)
+            sock = TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else TCPClient(inifile=inifile)
         
         sock.connect()
 

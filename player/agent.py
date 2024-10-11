@@ -1,12 +1,13 @@
 import configparser
 import inspect
 import math
-import json
 from timeout_decorator import timeout, TimeoutError
 from typing import Callable
 from lib.log import LogInfo, AgentLog
 from aiwolf_nlp_common import Action
 from aiwolf_nlp_common import util
+from aiwolf_nlp_common.connection import Connection
+from aiwolf_nlp_common.protocol import CommunicationProtocol
 
 class Agent:
     def __init__(self, inifile:configparser.ConfigParser, name:str, log_info:LogInfo, is_hand_over:bool=False):
@@ -78,65 +79,20 @@ class Agent:
         self.received = received
 
     def parse_info(self, receive: str) -> None:
-
-        received_list = receive.split("}\n{")
-
-        for index in range(len(received_list)):
-            received_list[index] = received_list[index].rstrip()
-
-            count = util.check_json_missing_part(responces=received_list[index])
-
-            while count < 0:
-                received_list[index] = "{" + received_list[index]
-                count += 1
-            
-            while count > 0:
-                received_list[index] += "}"
-                count -= 1
-            
-            if received_list[index][0] != "{":
-                received_list[index] = "{" + received_list[index] + "}"
-
-            self.received.append(received_list[index])
+        self.received = Connection.split_receive_info(receive=receive)
     
     def get_info(self):
-        try:
-            test = self.received.pop(0)
-            data = json.loads(test)
-        except:
-            print(test)
-            data = json.loads(test)
-
-        if data.get("gameInfo") is not None:
-            self.gameInfo = data["gameInfo"]
-        
-        if data.get("gameSetting") is not None:
-            self.gameSetting = data["gameSetting"]
-
-        if data.get("talkHistory") is not None:
-            self.talkHistory = data["talkHistory"]
-        
-        if data.get("whisperHistory") is not None:
-            self.whisperHistory = data["whisperHistory"]
-
-        self.request = data["request"]
-
-        self.logger.get_info(get_info=data, request=self.request)
+        self.protocol = CommunicationProtocol.initialize_from_json(received_str=self.received.pop(0))
    
     def initialize(self) -> None:
-        self.index:int = util.get_index_from_name(agent_name=self.gameInfo["agent"])
+        self.agent_name:str = self.protocol.game_info.agent
+        self.index:int = util.get_index_from_name(agent_name=self.agent_name)
 
-        self.time_limit:float = int(self.gameSetting["actionTimeout"])/1000 # ms -> s
-        self.role:str = self.gameInfo["roleMap"][self.gameInfo["agent"]]
+        self.time_limit:float = self.protocol.game_setting.get_action_timeout_in_seconds()
+        self.role:str = self.protocol.game_info.role_map.get_agent_role(agent=self.agent_name)
 
     def daily_initialize(self) -> None:
-        self.alive = []
-
-        for agent_name in self.gameInfo["statusMap"]:
-            agent_num:int = util.get_index_from_name(agent_name=agent_name)
-
-            if self.gameInfo["statusMap"][agent_name] == "ALIVE" and agent_num != self.index:
-                self.alive.append(agent_num)
+        self.alive = self.protocol.game_info.status_map.get_alive_agent_list()
 
     def daily_finish(self) -> None:
         pass
@@ -172,23 +128,23 @@ class Agent:
 
     def action(self) -> str:
 
-        if Action.is_initialize(request=self.request):
+        if Action.is_initialize(request=self.protocol.request):
             self.initialize()
-        elif Action.is_name(request=self.request):
+        elif Action.is_name(request=self.protocol.request):
             return self.get_name()
-        elif Action.is_role(request=self.request):
+        elif Action.is_role(request=self.protocol.request):
             return self.get_role()
-        elif Action.is_daily_initialize(request=self.request):
+        elif Action.is_daily_initialize(request=self.protocol.request):
             self.daily_initialize()
-        elif Action.is_daily_finish(request=self.request):
+        elif Action.is_daily_finish(request=self.protocol.request):
             self.daily_finish()
-        elif Action.is_talk(request=self.request):
+        elif Action.is_talk(request=self.protocol.request):
             return self.talk()
-        elif Action.is_vote(request=self.request):
+        elif Action.is_vote(request=self.protocol.request):
             return self.vote()
-        elif Action.is_whisper(request=self.request):
+        elif Action.is_whisper(request=self.protocol.request):
             self.whisper()
-        elif Action.is_finish(request=self.request):
+        elif Action.is_finish(request=self.protocol.request):
             self.finish()
         
         return ""
@@ -215,7 +171,7 @@ class Agent:
         if hasattr(self,'whisperHistory'):
             new_agent.whisperHistory = self.whisperHistory
 
-        new_agent.request = self.request
+        new_agent.request = self.protocol.request
 
         # initialize
         new_agent.index = self.index
