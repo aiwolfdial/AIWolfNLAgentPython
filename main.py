@@ -7,9 +7,11 @@ from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
 from aiwolf_nlp_common.connection import(
     Connection,
-    TCPClient,
-    TCPServer,
     SSHServer
+)
+from aiwolf_nlp_common.connection.tcp import(
+    TCPClient,
+    TCPServer
 )
 
 def main(sock:Union[TCPServer,TCPClient, SSHServer], inifile:configparser.ConfigParser, received:list, name:str, log_info:LogInfo):
