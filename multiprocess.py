@@ -5,9 +5,11 @@ from lib.log import LogInfo
 from aiwolf_nlp_common import util
 from aiwolf_nlp_common.connection import(
     Connection,
-    TCPClient,
-    TCPServer,
     SSHServer
+)
+from aiwolf_nlp_common.connection.tcp import(
+    TCPClient,
+    TCPServer
 )
 
 def execute_game(inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
