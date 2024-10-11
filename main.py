@@ -6,6 +6,7 @@ import player
 from aiwolf_nlp_common import util
 from aiwolf_nlp_common import Action
 from aiwolf_nlp_common.connection import(
+    Connection,
     TCPClient,
     TCPServer,
     SSHServer
@@ -37,13 +38,8 @@ if __name__ == "__main__":
     inifile = util.read_config_file(config_file_path=config_path)
 
     while True:
-    
-        # connect to server or listen client
-        if inifile.getboolean("connection","ssh_flag"):
-            sock = SSHServer(inifile=inifile, name=inifile.get("agent","name1"))
-        else:
-            sock = TCPServer(inifile=inifile, name=inifile.get("agent","name1")) if inifile.getboolean("connection","host_flag") else TCPClient(inifile=inifile)
-        
+
+        sock = Connection.get_socket(inifile=inifile)
         sock.connect()
 
         received = None
