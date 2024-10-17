@@ -79,7 +79,7 @@ class Agent:
         self.received = received
 
     def parse_info(self, receive: str) -> None:
-        self.received = Connection.split_receive_info(receive=receive)
+        self.received = receive
     
     def get_info(self):
         self.protocol = CommunicationProtocol.initialize_from_json(received_str=self.received.pop(0))
