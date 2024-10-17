@@ -71,7 +71,7 @@ class Agent:
             if type(result) is not int:
                 raise ValueError("Functions with the send_agent_index decorator must return an int type")
             
-            return util.index_to_agent_format(agent_index=result)
+            return util.get_name_from_index(agent_index=result)
         
         return _wrapper
 
@@ -114,7 +114,7 @@ class Agent:
     @with_timelimit
     @send_agent_index
     def vote(self) -> int:
-        vote_target:int = util.random_select(self.alive)
+        vote_target:int = util.get_index_from_name(agent_name=util.random_select(self.alive))
         self.logger.vote(vote_target=vote_target)
         return vote_target
     
