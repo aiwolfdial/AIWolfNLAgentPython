@@ -8,6 +8,7 @@ import shutil
 import configparser
 import player
 from lib.log import LogInfo
+from aiwolf_nlp_common.role import RoleInfo
 
 def read_text(path:str):
     with open(path,"r",encoding="utf-8") as f:
@@ -51,13 +52,14 @@ def check_json_missing_part(responces:str) -> int:
     return count
 
 def init_role(agent:player.agent.Agent, inifile:configparser.ConfigParser, name:str, log_info:LogInfo):
-    if agent.role == "VILLAGER":
+
+    if RoleInfo.is_villager(role=agent.role):
         new_agent = player.villager.Villager(inifile=inifile, name=name, log_info=log_info, is_hand_over=True)
-    elif agent.role == "WEREWOLF":
+    elif RoleInfo.is_werewolf(role=agent.role):
         new_agent = player.werewolf.Werewolf(inifile=inifile, name=name, log_info=log_info, is_hand_over=True)
-    elif agent.role == "SEER":
+    elif RoleInfo.is_seer(role=agent.role):
         new_agent = player.seer.Seer(inifile=inifile, name=name, log_info=log_info, is_hand_over=True)
-    elif agent.role == "POSSESSED":
+    elif RoleInfo.is_possessed(role=agent.role):
         new_agent = player.possessed.Possessed(inifile=inifile, name=name, log_info=log_info, is_hand_over=True)
     
     agent.hand_over(new_agent=new_agent)
