@@ -212,12 +212,12 @@ class AgentLog(Log):
 		self.info(f"Vote: " + util.index_to_agent_format(agent_index=vote_target))
 
 	@print_header_decorator
-	def divine(self, divine_target:str) -> None:
+	def divine(self, divine_target:int) -> None:
 		"""
 			print divine log
 		"""
 
-		self.info(f"Divine: " + divine_target)
+		self.info(f"Divine: " + util.index_to_agent_format(agent_index=divine_target))
 	
 	@print_header_decorator
 	def divine_result(self, divine_result:dict) -> None:
