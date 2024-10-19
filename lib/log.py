@@ -118,8 +118,12 @@ class AgentLog(Log):
 
 		log_info.increment_log_num()
 
-		self.log_dir_path = log_inifile.get("log","storage_path")
+		self.is_write = log_inifile.getboolean("log", "write")
+		self.log_dir_path = log_inifile.get("path","storage_path")
 		self.log_month_day_dir = self.log_dir_path + os.sep + current_time.strftime('%m-%d')
+
+		if not self.is_write:
+			return
 
 		if log_info.log_times_num == 0:
 			dir_num:int = len(util.get_directories(path=self.log_month_day_dir)) + 1
@@ -151,7 +155,7 @@ class AgentLog(Log):
 		def _wrapper(self,*args, **keywords):
 
 			# check write or not
-			if not self.log_flag_dict.get(func.__name__, True):
+			if not self.log_flag_dict.get(func.__name__, True) and self.is_write:
 				print(func.__name__)
 				return
 
