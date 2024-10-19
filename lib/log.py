@@ -122,9 +122,6 @@ class AgentLog(Log):
 		self.log_dir_path = log_inifile.get("path","storage_path")
 		self.log_month_day_dir = self.log_dir_path + os.sep + current_time.strftime('%m-%d')
 
-		if not self.is_write:
-			return
-
 		if log_info.log_times_num == 0:
 			dir_num:int = len(util.get_directories(path=self.log_month_day_dir)) + 1
 			log_info.log_times_num = dir_num
@@ -141,6 +138,9 @@ class AgentLog(Log):
 		self.log_flag_dict["talk"] = log_inifile.getboolean("log","talk")
 		self.log_flag_dict["vote"] = log_inifile.getboolean("log","vote")
 
+		if not self.is_write:
+			return
+
 		# prepare
 		self.prepare_log_dir()
 
@@ -155,7 +155,7 @@ class AgentLog(Log):
 		def _wrapper(self,*args, **keywords):
 
 			# check write or not
-			if not self.log_flag_dict.get(func.__name__, True) and self.is_write:
+			if not self.log_flag_dict.get(func.__name__, True) or not self.is_write:
 				print(func.__name__)
 				return
 

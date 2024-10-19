@@ -123,7 +123,7 @@ class Agent:
 
     def finish(self) -> str:
         self.gameContinue = False
-        self.logger.close()
+        if self.logger.is_write: self.logger.close()
 
     def action(self) -> str:
 
