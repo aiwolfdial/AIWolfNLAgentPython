@@ -157,15 +157,11 @@ $ sh execute.sh
 
 
 # 概要
-このリポジトリにはエージェントのサンプルPython実装と、エージェントを運営側の固定IPを用いてリモート待ち受け状態にするコードが含まれています。
+このリポジトリにはエージェントのサンプルコードが含まれています。
 エージェントは各自のサーバ・マシンで実行いただきます。そのため、エージェントの実装詳細は実装言語を含め、自由です。
 
 対戦の際は、5体のエージェントを固定IP/ポートにてリモート待ち受け状態にし、対戦接続システムを実行することでリモート対戦を行います。
 固定IP/ポートをご自身で用意できる方は自前でテストいただくこともできますが、予選提出の際は必ず下記の公式運営サーバに登録し公式運営サーバ経由で実行、ログの保存をしてください。
-その際は、運営が提供するLinuxサーバにSSH接続をしたうえでリモートフォワードし、ご自身のエージェントの固定IP待ち受けを実現します。
-つまり、参加者はインターネット（SSH)接続可能な任意のマシンで、このリポジトリのコードを実行すればよいことになります。
-
-※2023年までは主催者が提供する対戦サーバに自身のエージェント5体を接続して頂くことで対戦を自動実行していましたが、予期せぬプログラムの実行エラーや日程調整の兼ね合いが困難なことなどを鑑み、本年度からは参加者の方々に対戦サーバの待ち受けをして頂き主催者がそこに接続をする形で開催することに致しました。
 
 ## サンプルエージェントコード
 `全エージェント共通`の動作には`player/agent.py` が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。
@@ -179,8 +175,8 @@ $ sh execute.sh
 `人狼専用`の動作には`player/agent.py`を継承した`player/werewolf.py`が呼び出されますので、`attack`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
 
 ## 参加登録について
-公式運営サーバにssh接続するため、参加登録の際には公開鍵を添付してください。
-登録後、主催者からユーザ名、固定IPとポート番号を通知しますので、提供された内容を`res/ssh-config`に記述してください
+以下のURLをご参照ください。
+https://sites.google.com/view/aiwolfdial2024winterjp/エージェントの作成と対戦方法
 
 ## 環境構築について
 本プログラムを使用し、仮想環境として`venv`を使用する想定で手順を記載します。また、後述するコマンドを実行するosは`linux`を想定しています。
@@ -208,8 +204,7 @@ https://github.com/aiwolfdial/AIWolfNLPCommon
 デフォルトで以下の説明のように設定されていますが、ご自身の用途に合わせて設定を変更してください。
 
 ### [connection]
-※過去のシステムとの互換性設定のため、変更の必要はありません。
-`host_flag`: trueの場合に対戦接続の待ち受けを行います。 falseの場合はゲームサーバへの接続を行います。運営が提供する対戦接続システムの待ち受けを行う際は `host_flag = true`にして下さい。
+`host_flag`: trueの場合に対戦接続の待ち受けを行います。 falseの場合はゲームサーバへの接続を行います。
 
 `ssh_flag`: trueの場合に運営が提供するサーバへSSH接続をプログラムから行います。 falseの場合はSSH接続ではなく2023年以前のようにTCPコネクションを行います。
 
@@ -217,20 +212,9 @@ https://github.com/aiwolfdial/AIWolfNLPCommon
 
 `keep_connection`: **本戦の場合のみ** `true`にしてください。
 
-### [ssh-server]
-`config_path`:後述するSSH接続の設定を書いたファイルのパスです。\
-デフォルトでは`res/ssh-config`となっていますが、sshのconfigに書かれた方はそのパスを指定されても問題ありません。
-
-`host_name`:SSH接続の設定を書いたファイルからどのホストに対する設定を使用するか識別する際に使用します。\
-後述する`res/ssh-config`の`Host`と同じであれば問題ありません。
-
-`ssh_agent_flag`:\
-`false`(デフォルト):場合はssh-agentを使用しません。主にローカル環境等、プログラムを実行する環境で`秘密鍵が~/.ssh/等に置いてある方向け`です。後述する`res/ssh-config`で`IdentityFile`にご自身の秘密鍵のパスを書くようにしてください。ローカル環境から直接主催者が提供するサーバへSSH接続を行いたい方向けの設定です。\
-`true`:ssh-agentを使用します。主に、ローカル環境からではなくご自身のリモートサーバ等にプログラムがおいてあるため、プログラムを実行する環境で`秘密鍵を~/.ssh/等に置けない環境の方向け`です。一度ローカルからご自身のリモートサーバへ接続し、そこからさらに主催者が提供するサーバへSSH接続を行いたい方向けの設定です。\
-[踏み台サーバを経由する等、秘密鍵を参照することができない場所から接続を行う方向け](#踏み台サーバを経由する等、秘密鍵を参照することができない場所から接続を行う方向け)を参考にご自身のリモートサーバ等に接続し、プログラムを実行してください。こちらの場合は`res/ssh-config`で`IdentityFile`に**パスを記述せず**プログラムを実行してください。
-
 ### [tcp-client]
-※過去のシステムとの互換性設定のため、変更の必要はありません。
+* 過去のシステムとの互換性設定のため、大会参加時には変更の必要はありません。
+ローカルで自己対戦を行う際に使用します。
 
 `host`:2023年までの接続方式です。後述する`execute.sh`で使用しているため対戦サーバにSSHで接続される場合はデフォルトで設定をしてください。 
 
@@ -266,56 +250,6 @@ num = 1
 [agent]
 num = 5
 name1 = kanolab1
-```
-
-## res/ssh-configの設定の説明
-まず初めに`ssh-config.sample`を`ssh-config`にリネームしてください。\
-ここではSSH接続の設定を記述します。一般的なsshのconfigの記述方式に従っているため、`res/ssh-config`ではなく、`~/.ssh/config`に記述していただき、`res/config.ini`で`config_path=~/.ssh/config`として頂くことも可能です。
-
-`Host`:接続名です。`res/config.ini`の`host_name`と同じにしてください
-
-`User`:SSH接続を行う際のユーザ名です。こちらは参加登録後、運営から提供します。
-
-`IdentityFile`:`res/config.ini`で`ssh_flag = false`の場合に主に使用します。秘密鍵のパスです。
-
-`RemoteForward [remote_port1] localhost:[local_port1]`: 運営が提供するするサーバに対するリモートフォワードの設定です。運営が提供するサーバの[remote_port*]と参加者の皆様の[local_port*]をフォワーディングします。この1ポートを1エージェントが使用し、対戦接続システムと通信を行います。`remote_port*`に関しては参加登録後、運営が指定するポートを指定してください。
-
-
-```
-Host aiwolf-server
-HostName [対戦サーバのipアドレス]
-User [user name]
-IdentityFile ~/.ssh/id_rsa
-RemoteForward [remote_port1] localhost:[local_port1]
-RemoteForward [remote_port2] localhost:[local_port2]
-RemoteForward [remote_port3] localhost:[local_port3]
-RemoteForward [remote_port4] localhost:[local_port4]
-RemoteForward [remote_port5] localhost:[local_port5]
-```
-
-### 設定例
-ここでは、以下設定の例で`/res/ssh-config`の記述例を示します。
-
-設定
-```
-参加登録の際に提出した希望ユーザ名: kanolab
-参加登録の際に提出頂した公開鍵に対応する秘密鍵のパス: ~/.ssh/id_rsa
-参加登録の際に運営から指定された公式運営サーバのipアドレス: 0.0.0.0
-参加登録の際に運営から指定されたポート番号: 50000 ~ 50004
-自身の環境にバインドするポート番号: 50100 ~ 50104
-```
-
-設定に沿った場合の`./res/ssh-config`
-```
-Host aiwolf-server
-HostName 0.0.0.0
-User kanolab
-IdentityFile ~/.ssh/id_rsa
-RemoteForward 50000 localhost:50100
-RemoteForward 50001 localhost:50101
-RemoteForward 50002 localhost:50102
-RemoteForward 50003 localhost:50103
-RemoteForward 50004 localhost:50104
 ```
 
 ## res/logの設定の説明
@@ -416,29 +350,6 @@ RemoteForward 50004 localhost:50104
 	num = ???
 	```
 1. エージェントプログラムの実行
-	```
-	$ python3 multiprocess.py
-	```
-
-## 一部の方向けの情報
-### 踏み台サーバを経由する等、秘密鍵を参照することができない場所から接続を行う方向け
-この場合の接続方法はssh-agentを使用する方法となります。
-
-1. まずはローカルの環境で以下のコマンドを実行してください。`[秘密鍵]`の部分は参加登録の際に頂いた公開鍵に対応する秘密鍵を指定してください。
-	```
-	$ eval `ssh-agent`
-	$ ssh-add ~/.ssh/[秘密鍵]
-	```
-2. 次に以下のように`-A`オプションを付与してご自身のリモートサーバ等にアクセスしてください
-	```
-	$ ssh -A [host name]
-	```
-3. `./res/config.ini`の一部を以下に合わせてください
-	```
-	[ssh-server]
-	ssh_agent_flag = true
-	```
-4. プログラムを実行してください。
 	```
 	$ python3 multiprocess.py
 	```
