@@ -190,8 +190,18 @@ $ sh execute.sh
 ```
 $ python3 -m venv venv	# 仮想環境の作成
 $ . venv/bin/activate	# 仮想環境の有効化
+$ pip install aiwolf-nlp-common
 $ pip install -r res/requirements.txt	# ライブラリのインストール
 ```
+
+> [!WARNING]
+> `pip install aiwolf-nlp-common`がうまく実行できない場合、以下の手順も参考にしてみてください。 \
+> https://pypi.org/project/aiwolf-nlp-common/
+
+### aiwolf-nlp-commonパッケージについて
+人狼知能大会自然言語部門で使用する役職や接続方式に関するプログラムが定義されているPythonパッケージです。
+プログラムの詳細は以下のURLにあります。
+https://github.com/aiwolfdial/AIWolfNLPCommon
 
 ## res/config.iniの設定の説明
 まず初めに`config.ini.sample`を`config.ini`にリネームしてください。\
