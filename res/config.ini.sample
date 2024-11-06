@@ -1,7 +1,7 @@
 [connection]
 is_host = true
 websocket = false
-ssh = true
+ssh = false
 buffer = 2048
 keep_connection = false
 

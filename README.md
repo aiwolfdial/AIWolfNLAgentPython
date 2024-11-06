@@ -42,38 +42,10 @@ $ pip install -r res/requirements.txt
 
 ## 自己対戦
 
-1. `res/config.ini.sample`を`res/config.ini`に名前を変更してください。また、以下の設定を行ってください。
-	```
-	[connection]
-	host_flag = true
-	ssh_flag = false
-
-	(...)
-	
-	[tcp-server]
-	ip = localhost
-	port1 = 50000		; Agent[01]の待ち受けポート
-	port2 = 50001		; Agent[02]の待ち受けポート
-	port3 = 50002		; Agent[03]の待ち受けポート
-	port4 = 50003		; Agent[04]の待ち受けポート
-	port5 = 50004		; Agent[05]の待ち受けポート
-
-	(...)
-
-	[game]
-	num = 1				; 連続ゲーム回数
-
-	[agent]
-	num = 5				; Agentの数
-	name1 = kanolab1	; Agent[01]の名前
-	name2 = kanolab2	; Agent[02]の名前
-	name3 = kanolab3	; Agent[03]の名前
-	name4 = kanolab4	; Agent[04]の名前
-	name5 = kanolab5	; Agent[05]の名前
-	```
+1. `res/config.ini.sample`を`res/config.ini`に名前を変更してください。
 1. 以下のコマンドを実行してください。
 	```
-	$ python3 multiprocess.py
+	$ python multiprocess.py
 	```
 1. 対戦接続システムを起動してください。\
 	対戦接続システムは、https://github.com/aiwolfdial/AIWolfNLPServer をご覧ください。
@@ -95,7 +67,7 @@ $ pip install -r res/requirements.txt
 2. `res/ssh-config`の設定を行ってください。
 3. 最後にエージェントのプログラムを実行してください
 	```
-	$ python3 multiprocess.py
+	$ python multiprocess.py
 	```
 4. エージェントが待ち受けているポート番号を運営が提供するするサーバの対戦プログラムに伝える。
 	[AIWolfPreliminaryRun](https://github.com/aiwolfdial/AIWolfPreliminaryRun)の内容に従ってAIWolfPreliminaryRunのプログラムを実行してください。
@@ -117,7 +89,7 @@ $ pip install -r res/requirements.txt
 	```
 1. エージェントプログラムの実行
 	```
-	$ python3 multiprocess.py
+	$ python multiprocess.py
 	```
 
 ## 設定
