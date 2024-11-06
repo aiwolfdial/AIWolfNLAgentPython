@@ -5,12 +5,10 @@
 大会についての詳細は、https://sites.google.com/view/aiwolfdial2024winterjp/ をご覧ください。  
 ローカル内で動作確認ならびに自己対戦するための対戦接続システムは、https://github.com/aiwolfdial/AIWolfNLPServer をご覧ください。  
 
-# 概要
+## 概要
 
 エージェントは参加者ご自身のマシンで実行する必要があります。そのため、エージェントの実装については実装言語を含め、制限はありません。  
 自己対戦の際は、5体のエージェントを固定IP/ポートにてリモート待ち受け状態にし、対戦接続システムを実行することで対戦を行います。  
-
-## サンプルエージェントコード
 
 `全エージェント共通`の動作には`player/agent.py` が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。  
 `村人専用`の動作には`player/agent.py`を継承した`player/villager.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。  
@@ -18,11 +16,11 @@
 `狂人専用`の動作には`player/agent.py`を継承した`player/possessed.py`が呼び出されますので、`talk`,`vote`関数をカスタマイズしてお使いください。  
 `人狼専用`の動作には`player/agent.py`を継承した`player/werewolf.py`が呼び出されますので、`attack`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
 
-## 参加登録について
+## 参加登録
 
 https://sites.google.com/view/aiwolfdial2024winterjp/ をご覧ください。
 
-## 環境構築について
+## 環境構築
 
 ```
 $ git clone https://github.com/aiwolfdial/AIWolfNLAgentPython
@@ -42,8 +40,7 @@ $ pip install -r res/requirements.txt
 役職や接続方式に関するプログラムが定義されているPythonパッケージです。  
 詳細については、https://github.com/aiwolfdial/AIWolfNLPCommon をご覧ください。
 
-
-## 自己対戦方法
+## 自己対戦
 
 1. `res/config.ini.sample`を`res/config.ini`に名前を変更してください。また、以下の設定を行ってください。
 	```
@@ -81,7 +78,7 @@ $ pip install -r res/requirements.txt
 1. 対戦接続システムを起動してください。\
 	対戦接続システムは、https://github.com/aiwolfdial/AIWolfNLPServer をご覧ください。
 
-## 主催者が提供するサーバでの自己対戦の実行確認方法
+### 主催者が提供するサーバでの自己対戦の実行
 
 > [!WARNING]
 > 人狼知能コンテスト2024冬季国内大会から新しい対戦接続システムに置き換える予定であるため、以下の手順とは異なります。
@@ -103,7 +100,7 @@ $ pip install -r res/requirements.txt
 4. エージェントが待ち受けているポート番号を運営が提供するするサーバの対戦プログラムに伝える。
 	[AIWolfPreliminaryRun](https://github.com/aiwolfdial/AIWolfPreliminaryRun)の内容に従ってAIWolfPreliminaryRunのプログラムを実行してください。
 
-## 本戦での実行方法
+### 本戦での実行
 
 > [!WARNING]
 > 人狼知能コンテスト2024冬季国内大会から新しい対戦接続システムに置き換える予定であるため、以下の手順とは異なります。
