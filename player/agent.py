@@ -81,17 +81,20 @@ class Agent:
         self.received = receive
     
     def get_info(self):
-        self.protocol = CommunicationProtocol.initialize_from_json(received_str=self.received.pop(0))
+        if not hasattr(self, 'protocol'):
+            self.protocol = CommunicationProtocol.initialize_from_json(received_str=self.received.pop(0))
+        else:
+            self.protocol.update_from_json(received_str=self.received.pop(0))
    
     def initialize(self) -> None:
-        self.agent_name:str = self.protocol.game_info.agent
+        self.agent_name:str = self.protocol.info.agent
         self.index:int = util.get_index_from_name(agent_name=self.agent_name)
 
-        self.time_limit:float = self.protocol.game_setting.get_action_timeout_in_seconds()
-        self.role:str = self.protocol.game_info.role_map.get_agent_role(agent=self.agent_name)
+        self.time_limit:int = self.protocol.setting.action_timeout
+        self.role:str = self.protocol.info.role_map.get_role(agent=self.agent_name)
 
     def daily_initialize(self) -> None:
-        self.alive = self.protocol.game_info.status_map.get_alive_agent_list()
+        self.alive:list = self.protocol.info.status_map.get_alive_agent_list()
 
     def daily_finish(self) -> None:
         pass

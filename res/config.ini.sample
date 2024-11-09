@@ -1,6 +1,6 @@
 [connection]
-is_host = true
-websocket = false
+is_host = false
+websocket = true
 ssh = false
 buffer = 2048
 keep_connection = false
@@ -26,6 +26,9 @@ config_path = ./res/ssh-config
 host_name = aiwolf-server
 ssh_agent_flag = false
 timeout = 200
+
+[websocket]
+uri = 127.0.0.1:50000
 
 [game]
 num = 1

@@ -36,9 +36,9 @@ class Seer(Agent):
     @Agent.with_timelimit
     def talk(self) -> str:
 
-        if self.protocol.is_set_game_info() and self.protocol.game_info.is_set_divine_result():
-            self.logger.divine_result(divine_result=self.protocol.game_info.divine_result.result)
-            return self.protocol.game_info.divine_result.result
+        if not self.protocol.info.divine_result.is_empty():
+            self.logger.divine_result(divine_result=self.protocol.info.divine_result.result)
+            return self.protocol.info.divine_result.result
 
         return super().talk()
     
