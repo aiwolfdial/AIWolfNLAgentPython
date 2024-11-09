@@ -32,6 +32,7 @@ $ pip install -r res/requirements.txt
 ```
 
 > [!WARNING]
+> aiwolf-nlp-common >= 0.0.2.1 であることを確認してください。\
 > `pip install aiwolf-nlp-common` に失敗する場合は、以下のURLを参照してください。
 > https://pypi.org/project/aiwolf-nlp-common/
 
