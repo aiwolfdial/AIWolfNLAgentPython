@@ -219,6 +219,7 @@ pyvenv.cfg
 pip-selfcheck.json
 
 ### VisualStudioCode ###
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -267,5 +268,5 @@ $RECYCLE.BIN/
 
 /log
 /res/*.ini
-/res/ssh-config
+/res/ssh-configf
 connect_to_server.py
