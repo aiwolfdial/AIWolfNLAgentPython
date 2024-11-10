@@ -1,31 +1,8 @@
 [connection]
 is_host = false
 websocket = true
-ssh = false
 buffer = 2048
 keep_connection = false
-
-[tcp-server]
-ip = localhost
-port1 = 50000
-port2 = 50001
-port3 = 50002
-port4 = 50003
-port5 = 50004
-
-[tcp-client]
-; local sever settings
-host = localhost
-port = 10001
-; remote sever settings
-; host = 160.16.83.206
-; port = 10001
-
-[ssh-server]
-config_path = ./res/ssh-config
-host_name = aiwolf-server
-ssh_agent_flag = false
-timeout = 200
 
 [websocket]
 uri = 127.0.0.1:50000
