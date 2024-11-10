@@ -65,13 +65,10 @@ $ pip install -r res/requirements.txt
 	[game]
 	num = 1
 	```
-2. `res/ssh-config`の設定を行ってください。
-3. 最後にエージェントのプログラムを実行してください
+1. エージェントのプログラムを実行してください
 	```
 	$ python multiprocess.py
 	```
-4. エージェントが待ち受けているポート番号を運営が提供するするサーバの対戦プログラムに伝える。
-	[AIWolfPreliminaryRun](https://github.com/aiwolfdial/AIWolfPreliminaryRun)の内容に従ってAIWolfPreliminaryRunのプログラムを実行してください。
 
 ### 本戦での実行
 
@@ -98,16 +95,9 @@ $ pip install -r res/requirements.txt
 `res/config.ini.sample` を `res/config.ini` に名前を変更してください。  
 
 ### [connection]
-
-`host_flag`: trueの場合に対戦接続の待ち受けを行います。 falseの場合はゲームサーバへの接続を行います。  
-`ssh_flag`: trueの場合に運営が提供するサーバへSSH接続をプログラムから行います。 falseの場合はSSH接続ではなく2023年以前のようにTCPコネクションを行います。  
+`websocket`: WebSocketを使用して大戦サーバと通信を行うか設定します。
 `buffer`: 対戦サーバとの送受信の際に利用されるバッファサイズです。  
 `keep_connection`: **本戦の場合のみ** `true`にしてください。
-
-### [tcp-client]
-
-**過去のシステムとの互換性設定のため、大会参加時には変更の必要はありません。ローカルで自己対戦を行う際に使用します。**  
-`host`:2023年までの接続方式です。後述する`execute.sh`で使用しているため対戦サーバにSSHで接続される場合はデフォルトで設定をしてください。`ssh_flag=false`かつ`host_flag=false`の時に対戦サーバに接続するTCPクライアントとして動作します。
 
 ### [game]
 
@@ -120,20 +110,12 @@ $ pip install -r res/requirements.txt
 
 ```
 [connection]
-host_flag = true
-ssh_flag = true
+websocket = true
 buffer = 2048
+keep_connection = false
 
-[ssh-server]
-config_path = ./res/ssh-config
-host_name = aiwolf-server
-ssh_agent_flag = true
-timeout = 200
-
-[tcp-client]
-; local sever settings
-host = localhost
-port = 10001
+[websocket]
+uri = 127.0.0.1:50000
 
 [game]
 num = 1
@@ -141,6 +123,11 @@ num = 1
 [agent]
 num = 5
 name1 = kanolab1
+
+
+[filePath]
+log_inifile = ./res/log.ini
+random_talk = ./res/2019071_44011_AIWolfTalkLogs.txt
 ```
 
 ## ログの設定
