@@ -1,5 +1,4 @@
 [connection]
-is_host = false
 websocket = true
 buffer = 2048
 keep_connection = false
