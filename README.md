@@ -22,7 +22,7 @@
 ## 環境構築
 
 ```
-git clone https://github.com/aiwolfdial/AIWolfNLAgentPython/
+git clone https://github.com/kano-lab/aiwolf-nlp-agent.git
 cd AIWolfNLAgentPython
 python -m venv .venv
 source .venv/bin/activate
@@ -31,7 +31,7 @@ pip install .
 
 > [!NOTE]
 > aiwolf-nlp-commonとは、役職や接続方式に関するプログラムが定義されているPythonパッケージです。
-> 詳細については、https://github.com/aiwolfdial/AIWolfNLPCommon をご覧ください。
+> 詳細については、https://github.com/kano-lab/aiwolf-nlp-common をご覧ください。
 
 ## 実行方法
 
