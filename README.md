@@ -19,7 +19,7 @@
 - 狂人: `player/possessed.py` が呼び出されます。`talk`,`vote`関数をカスタマイズしてお使いください。
 - 人狼: `player/werewolf.py` が呼び出されます。`attack`関数や`talk`,`vote`関数をカスタマイズしてお使いください。
 
-## 実行方法
+## 環境構築
 
 ```
 git clone https://github.com/aiwolfdial/AIWolfNLAgentPython/
@@ -29,63 +29,40 @@ source .venv/bin/activate
 pip install .
 ```
 
-### aiwolf-nlp-commonパッケージについて
+> [!NOTE]
+> aiwolf-nlp-commonとは、役職や接続方式に関するプログラムが定義されているPythonパッケージです。
+> 詳細については、https://github.com/aiwolfdial/AIWolfNLPCommon をご覧ください。
 
-役職や接続方式に関するプログラムが定義されているPythonパッケージです。  
-詳細については、https://github.com/aiwolfdial/AIWolfNLPCommon をご覧ください。
+## 実行方法
 
-## 自己対戦
+### 自己対戦
 
-1. `res/config.ini.sample`を`res/config.ini`に名前を変更してください。
-1. 以下のコマンドを実行してください。
-	```
-	$ python multiprocess.py
-	```
-1. 対戦接続システムを起動してください。\
-	対戦接続システムは、https://github.com/aiwolfdial/AIWolfNLPServer をご覧ください。
+事前に、ローカル内にゲームサーバを立ち上げる必要があります。  
+[kano-lab/aiwolf-nlp-server](https://github.com/kano-lab/aiwolf-nlp-server) を参考にしてください。
+
+```
+cp res/config.ini.sample res/config.ini
+cp res/log.ini.sample res/log.ini
+python multiprocess.py
+```
 
 ### 主催者が提供するサーバでの自己対戦の実行
 
-> [!WARNING]
-> 人狼知能コンテスト2024冬季国内大会から新しい対戦接続システムに置き換える予定であるため、以下の手順とは異なります。
-> 新しい対戦接続システムについて決まり次第、こちらに記載します。
+`res/config.ini` を主催者から提供された設定に変更してください。  
 
-ここでは参加者の方々に対戦サーバの待ち受けができているか確認する方法を説明します。
+```
+python multiprocess.py
+```
 
-1. `res/config.ini`の設定を行ってください。
-	以下の値は変更を行わないでください。
-	```	
-	[game]
-	num = 1
-	```
-1. エージェントのプログラムを実行してください
-	```
-	$ python multiprocess.py
-	```
+### 主催者が提供するサーバでの本戦の実行
 
-### 本戦での実行
+`res/config.ini` を主催者から提供された設定に変更してください。  
 
-> [!WARNING]
-> 人狼知能コンテスト2024冬季国内大会から新しい対戦接続システムに置き換える予定であるため、以下の手順とは異なります。
-> 新しい対戦接続システムについて決まり次第、こちらに記載します。
-
-1. `res/config.ini`の設定を行ってください。
-	以下の値は当日の運営の指示に従い設定してください。
-	```	
-	[game]
-	num = ???
-
-	[agent]
-	num = ???
-	```
-1. エージェントプログラムの実行
-	```
-	$ python multiprocess.py
-	```
+```
+python multiprocess.py
+```
 
 ## 設定
-
-`res/config.ini.sample` を `res/config.ini` に名前を変更してください。  
 
 ### [connection]
 `websocket`: WebSocketを使用して大戦サーバと通信を行うか設定します。
