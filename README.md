@@ -1,6 +1,6 @@
 # aiwolf-nlp-agent
 
-人狼知能コンテスト2024冬季 国内大会（自然言語部門） のサンプルエージェントです。  
+人狼知能コンテスト2024冬季 国内大会（自然言語部門） のサンプルエージェントです。
 
 ローカル内での動作確認ならびに自己対戦するためのゲームサーバについては、[kano-lab/aiwolf-nlp-server](https://github.com/kano-lab/aiwolf-nlp-server) を参考にしてください。  
 大会の詳細ならびに参加登録については、[AIWolfDial2024WinterJp](https://sites.google.com/view/aiwolfdial2024winterjp/) を参考にしてください。
