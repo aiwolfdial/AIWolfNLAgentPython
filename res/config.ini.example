@@ -4,7 +4,7 @@ buffer = 2048
 keep_connection = false
 
 [websocket]
-uri = 127.0.0.1:50000
+uri = 127.0.0.1:8080
 
 [game]
 num = 1

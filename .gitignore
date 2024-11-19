@@ -269,4 +269,3 @@ $RECYCLE.BIN/
 /log
 /res/*.ini
 /res/ssh-config
-connect_to_server.py

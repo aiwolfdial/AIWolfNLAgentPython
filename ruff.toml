@@ -1,0 +1,29 @@
+line-length = 100
+exclude = [".venv", "__init__.py"]
+
+[lint]
+select = ["ALL"]
+ignore = [
+    "W191",
+    "D206",
+    "D203",
+    "D213",
+    "COM812",
+    "ISC001",
+    "S311",
+    "PLR0913",
+    "FBT001",
+]
+fixable = ["ALL"]
+unfixable = []
+
+[lint.pydocstyle]
+convention = "google"
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
