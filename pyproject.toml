@@ -6,8 +6,16 @@ license = { file = "LICENSE" }
 requires-python = ">=3.8"
 readme = "README.md"
 dependencies = ["aiwolf-nlp-common>=0.2.0", "timeout-decorator == 0.5.0"]
-authors = [{ name = "aiwolf", email = "aiwolf@kanolab.net" }]
-maintainers = [{ name = "aiwolf", email = "aiwolf@kanolab.net" }]
+authors = [
+    { name = "aiwolfdial", email = "aiwolf@kanolab.net" },
+    { name = "nwatanabe", email = "nwatanabe@kanolab.net" },
+    { name = "ysahashi", email = "ysahashi@kanolab.net" },
+]
+maintainers = [
+    { name = "aiwolfdial", email = "aiwolf@kanolab.net" },
+    { name = "nwatanabe", email = "nwatanabe@kanolab.net" },
+    { name = "ysahashi", email = "ysahashi@kanolab.net" },
+]
 keywords = ["aiwolf"]
 
 [project.urls]
