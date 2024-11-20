@@ -49,7 +49,7 @@ class Agent:
                 time_limit = min(self.time_limit, keywords.get("time_limit"))
 
             # define local function
-            @timeout(time_limit, use_signals=False)
+            @timeout(time_limit)
             def execute_func(self, *args, **keywords):
                 # execute function
                 if len(keywords) == 0:

@@ -6,6 +6,7 @@ import random
 import re
 import shutil
 import time
+from pathlib import Path
 
 from aiwolf_nlp_common.role import RoleInfo
 
@@ -99,14 +100,11 @@ def is_file_exists(file_path: str) -> bool:
 
 
 def is_directory_exists(directory_path: str) -> bool:
-    return os.path.isdir(directory_path)
+    return Path(directory_path).is_dir()
 
 
 def make_directory(directory_path: str) -> None:
-    if not is_directory_exists(directory_path=directory_path) and not os.path.exists(
-        directory_path
-    ):
-        os.mkdir(directory_path)
+    Path(directory_path).mkdir(parents=True, exist_ok=True)
 
 
 def delete_file(delete_file_path: str) -> None:
@@ -143,7 +141,7 @@ def move_log(current_path: str, next_path: str) -> None:
 
 
 def get_index_from_name(agent_name: str) -> int:
-    return int(re.sub("[a-zA-Z\[\]]", "", agent_name))
+    return int(re.search(r"\d+", agent_name).group())
 
 
 def index_to_agent_format(agent_index: int) -> str:
@@ -154,4 +152,5 @@ def wait(wait_time: int) -> None:
     start_time = time.time()
 
     while time.time() - start_time < wait_time:
+        pass
         pass
