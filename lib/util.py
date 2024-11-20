@@ -100,12 +100,12 @@ def is_directory_exists(directory_path: str) -> bool:
 
 
 def make_directory(directory_path: str) -> None:
-    if not is_directory_exists(directory_path=directory_path):
+    if not is_directory_exists(directory_path=directory_path) and not os.path.exists(directory_path):
         os.mkdir(directory_path)
 
 
 def delete_file(delete_file_path: str) -> None:
-    if not is_file_exists(log_path=delete_file_path):
+    if not is_file_exists(file_path=delete_file_path):
         return
 
     os.remove(path=delete_file_path)
