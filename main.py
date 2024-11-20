@@ -30,7 +30,9 @@ def main(
         message = agent.action()
 
         if Action.is_initialize(request=agent.protocol.request):
-            agent = lib.util.init_role(agent=agent, inifile=inifile, name=name, log_info=log_info)
+            agent = lib.util.init_role(
+                agent=agent, inifile=inifile, name=name, log_info=log_info
+            )
 
         if message != "":
             sock.send(message=message)
@@ -43,6 +45,8 @@ if __name__ == "__main__":
 
     inifile = util.read_config_file(config_file_path=config_path)
 
+    log_info = LogInfo()
+
     while True:
         sock = util.get_socket(inifile=inifile, name=inifile.get("agent", "name1"))
         sock.connect()
@@ -51,7 +55,11 @@ if __name__ == "__main__":
 
         for _ in range(inifile.getint("game", "num")):
             received = main(
-                sock=sock, inifile=inifile, received=received, name=inifile.get("agent", "name1")
+                sock=sock,
+                inifile=inifile,
+                received=received,
+                name=inifile.get("agent", "name1"),
+                log_info=log_info,
             )
 
         sock.close()

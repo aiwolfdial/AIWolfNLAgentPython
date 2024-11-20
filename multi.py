@@ -16,7 +16,11 @@ def execute_game(inifile: configparser.ConfigParser, name: str, log_info: LogInf
 
         for _ in range(inifile.getint("game", "num")):
             received = main.main(
-                sock=sock, inifile=inifile, received=received, name=name, log_info=log_info
+                sock=sock,
+                inifile=inifile,
+                received=received,
+                name=name,
+                log_info=log_info,
             )
 
         sock.close()
@@ -26,6 +30,8 @@ def execute_game(inifile: configparser.ConfigParser, name: str, log_info: LogInf
 
 
 if __name__ == "__main__":
+    multiprocessing.set_start_method("spawn")
+
     config_path = "./res/config.ini"
 
     inifile = util.read_config_file(config_file_path=config_path)

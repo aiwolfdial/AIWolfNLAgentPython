@@ -29,7 +29,9 @@ class LogInfo:
         if type(time) is not datetime.datetime:
             raise ValueError("time must be a datetime type")
 
-        self.__game_start_time.value = bytes(time.strftime(LogInfo.format), LogInfo.encode)
+        self.__game_start_time.value = bytes(
+            time.strftime(LogInfo.format), LogInfo.encode
+        )
 
     @property
     def log_num(self) -> int:
@@ -68,7 +70,9 @@ class Log:
         # set logger
         self.logger = logging.getLogger(log_name)
         self.logger.setLevel(logging.DEBUG)
-        self.log_handler = logging.FileHandler(log_path, mode="w", encoding=Log.encode_format)
+        self.log_handler = logging.FileHandler(
+            log_path, mode="w", encoding=Log.encode_format
+        )
         self.logger.addHandler(self.log_handler)
         self.log_fmt = logging.Formatter("%(message)s")
         self.log_handler.setFormatter(self.log_fmt)
@@ -102,9 +106,13 @@ class AgentLog(Log):
     small_header_format = "-------{header}-------"
     custom_response = "--------------{custom} RESPONSE--------------"
 
-    def __init__(self, inifile: configparser.ConfigParser, agent_name: str, log_info: LogInfo):
+    def __init__(
+        self, inifile: configparser.ConfigParser, agent_name: str, log_info: LogInfo
+    ):
         # load log inifile
-        log_inifile = util.check_config(config_path=inifile.get("filePath", "log_inifile"))
+        log_inifile = util.check_config(
+            config_path=inifile.get("filePath", "log_inifile")
+        )
         log_inifile.read(inifile.get("filePath", "log_inifile"), "UTF-8")
 
         # set log path
@@ -113,13 +121,17 @@ class AgentLog(Log):
         if log_info.log_num % inifile.getint("agent", "num") == 0:
             log_info.game_start_time = current_time
         else:
-            current_time = datetime.datetime.strptime(log_info.game_start_time, LogInfo.format)
+            current_time = datetime.datetime.strptime(
+                log_info.game_start_time, LogInfo.format
+            )
 
         log_info.increment_log_num()
 
         self.is_write = log_inifile.getboolean("log", "write")
         self.log_dir_path = log_inifile.get("path", "storage_path")
-        self.log_month_day_dir = self.log_dir_path + os.sep + current_time.strftime("%m-%d")
+        self.log_month_day_dir = (
+            self.log_dir_path + os.sep + current_time.strftime("%m-%d")
+        )
 
         if log_info.log_times_num == 0:
             dir_num: int = len(util.get_directories(path=self.log_month_day_dir)) + 1

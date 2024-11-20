@@ -49,7 +49,7 @@ class Agent:
                 time_limit = min(self.time_limit, keywords.get("time_limit"))
 
             # define local function
-            @timeout(time_limit)
+            @timeout(time_limit, use_signals=False)
             def execute_func(self, *args, **keywords):
                 # execute function
                 if len(keywords) == 0:
@@ -130,7 +130,9 @@ class Agent:
     @with_timelimit
     @send_agent_index
     def vote(self) -> int:
-        vote_target: int = util.get_index_from_name(agent_name=util.random_select(self.alive))
+        vote_target: int = util.get_index_from_name(
+            agent_name=util.random_select(self.alive)
+        )
         self.logger.vote(vote_target=vote_target)
         return vote_target
 

@@ -43,7 +43,7 @@ pip install .
 ```
 cp res/config.ini.sample res/config.ini
 cp res/log.ini.sample res/log.ini
-python multiprocess.py
+python multi.py
 ```
 
 ### 主催者が提供するサーバでの自己対戦の実行
@@ -51,7 +51,7 @@ python multiprocess.py
 `res/config.ini` を主催者から提供された設定に変更してください。  
 
 ```
-python multiprocess.py
+python multi.py
 ```
 
 ### 主催者が提供するサーバでの本戦の実行
@@ -59,7 +59,7 @@ python multiprocess.py
 `res/config.ini` を主催者から提供された設定に変更してください。  
 
 ```
-python multiprocess.py
+python multi.py
 ```
 
 ## 設定

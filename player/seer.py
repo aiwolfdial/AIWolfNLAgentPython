@@ -44,7 +44,9 @@ class Seer(Agent):
     @Agent.with_timelimit
     def talk(self) -> str:
         if not self.protocol.info.divine_result.is_empty():
-            self.logger.divine_result(divine_result=self.protocol.info.divine_result.result)
+            self.logger.divine_result(
+                divine_result=self.protocol.info.divine_result.result
+            )
             return self.protocol.info.divine_result.result
 
         return super().talk()
@@ -60,7 +62,9 @@ class Seer(Agent):
     @Agent.with_timelimit
     @Agent.send_agent_index
     def divine(self) -> int:
-        divine_target: int = util.get_index_from_name(agent_name=util.random_select(self.alive))
+        divine_target: int = util.get_index_from_name(
+            agent_name=util.random_select(self.alive)
+        )
         self.logger.divine(divine_target=divine_target)
         return divine_target
 

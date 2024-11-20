@@ -59,7 +59,10 @@ def check_json_missing_part(responces: str) -> int:
 
 
 def init_role(
-    agent: player.agent.Agent, inifile: configparser.ConfigParser, name: str, log_info: LogInfo
+    agent: player.agent.Agent,
+    inifile: configparser.ConfigParser,
+    name: str,
+    log_info: LogInfo,
 ):
     if RoleInfo.is_villager(role=agent.role):
         new_agent = player.villager.Villager(
@@ -100,7 +103,9 @@ def is_directory_exists(directory_path: str) -> bool:
 
 
 def make_directory(directory_path: str) -> None:
-    if not is_directory_exists(directory_path=directory_path) and not os.path.exists(directory_path):
+    if not is_directory_exists(directory_path=directory_path) and not os.path.exists(
+        directory_path
+    ):
         os.mkdir(directory_path)
 
 
