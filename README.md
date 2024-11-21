@@ -46,6 +46,10 @@ cp res/log.ini.sample res/log.ini
 python multi.py
 ```
 
+> [!CAUTION]
+> タイムアウト処理に `SIGALRM` を使用しているため、Windows環境では正常に動作しない問題があります。
+> 現在、別方法でのタイムアウト処理を検討中です。
+
 ### 主催者が提供するサーバでの自己対戦の実行
 
 `res/config.ini` を主催者から提供された設定に変更してください。  
