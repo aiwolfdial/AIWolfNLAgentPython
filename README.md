@@ -23,7 +23,7 @@
 
 ```
 git clone https://github.com/kano-lab/aiwolf-nlp-agent.git
-cd AIWolfNLAgentPython
+cd aiwolf-nlp-agent
 python -m venv .venv
 source .venv/bin/activate
 pip install .
