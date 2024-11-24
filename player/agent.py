@@ -32,22 +32,23 @@ class Agent:
     @staticmethod
     def timeout(func: Callable):
         def _wrapper(self, *args, **kwargs):
-            res = None
+            result = None
 
-            def _timeout():
-                nonlocal res
+            def execute_with_timeout():
+                nonlocal result
                 try:
-                    res = func(self, *args, **kwargs)
-                except Exception as e:  # noqa: BLE001
-                    res = e
+                    result = func(self, *args, **kwargs)
+                except Exception as e:
+                    result = e
 
-            t = Thread(target=_timeout)
-            t.daemon = True
-            t.start()
-            t.join(self.time_limit)
-            if isinstance(res, Exception):
-                raise res
-            return res
+            thread = Thread(target=execute_with_timeout, daemon=True)
+            thread.start()
+            thread.join(timeout=self.time_limit)
+
+            if isinstance(result, Exception):
+                raise result
+
+            return result
 
         return _wrapper
 
