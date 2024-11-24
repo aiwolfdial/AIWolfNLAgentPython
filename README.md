@@ -85,7 +85,7 @@ buffer = 2048
 keep_connection = false
 
 [websocket]
-uri = 127.0.0.1:50000
+uri = ws://127.0.0.1:8080/ws
 
 [game]
 num = 1
