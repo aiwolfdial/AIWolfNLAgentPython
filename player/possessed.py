@@ -29,23 +29,23 @@ class Possessed(Agent):
     def daily_finish(self) -> None:
         return super().daily_finish()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def get_name(self) -> str:
         return super().get_name()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def get_role(self) -> str:
         return super().get_role()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def talk(self) -> str:
         return super().talk()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def vote(self) -> int:
         return super().vote()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def whisper(self) -> None:
         return super().whisper()
 

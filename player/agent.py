@@ -1,11 +1,11 @@
 import configparser
 import inspect
 import math
+from threading import Thread
 from typing import Callable
 
 from aiwolf_nlp_common import Action, util
 from aiwolf_nlp_common.protocol import CommunicationProtocol
-from timeout_decorator import TimeoutError, timeout
 
 from lib.log import AgentLog, LogInfo
 
@@ -18,54 +18,36 @@ class Agent:
         log_info: LogInfo,
         is_hand_over: bool = False,
     ):
-        self.time_limit: float = 1.0
         self.name: str = name
         self.received: list = []
+        self.time_limit: int = 0
         self.gameContinue: bool = True
 
         if not is_hand_over:
             self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
 
-        self.comments: list = util.read_text_file(
-            text_file_path=inifile.get("filePath", "random_talk")
-        )
+        with open(inifile.get("filePath", "random_talk"), "r", encoding="utf-8") as f:
+            self.comments: list = f.read().splitlines()
 
-    def with_timelimit(func: Callable):
-        def _wrapper(self, *args, **keywords):
-            time_limit: float = 0.0
-            result: str = ""
+    @staticmethod
+    def timeout(func: Callable):
+        def _wrapper(self, *args, **kwargs):
+            res = None
 
-            # set time limit
-            if (
-                math.isclose(self.time_limit, 0, abs_tol=1e-10)
-                and keywords.get("time_limit") is None
-            ):
-                raise ValueError(func.__name__ + ": time limit is not found")
-            elif math.isclose(self.time_limit, 0, abs_tol=1e-10):
-                time_limit = keywords.get("time_limit")
-            elif keywords.get("time_limit") is None:
-                time_limit = self.time_limit
-            else:
-                time_limit = min(self.time_limit, keywords.get("time_limit"))
+            def _timeout():
+                nonlocal res
+                try:
+                    res = func(self, *args, **kwargs)
+                except Exception as e:  # noqa: BLE001
+                    res = e
 
-            # define local function
-            @timeout(time_limit)
-            def execute_func(self, *args, **keywords):
-                # execute function
-                if len(keywords) == 0:
-                    result = func(self)
-                else:
-                    result = func(self, *args, **keywords)
-
-                return result
-
-            try:
-                # call local function
-                result = execute_func(self, *args, **keywords)
-            except TimeoutError:
-                print(func.__name__ + " has run out of time.")
-
-            return result
+            t = Thread(target=_timeout)
+            t.daemon = True
+            t.start()
+            t.join(self.time_limit)
+            if isinstance(res, Exception):
+                raise res
+            return res
 
         return _wrapper
 
@@ -113,21 +95,21 @@ class Agent:
     def daily_finish(self) -> None:
         pass
 
-    @with_timelimit
+    @timeout
     def get_name(self) -> str:
         return self.name
 
-    @with_timelimit
+    @timeout
     def get_role(self) -> str:
         return self.role
 
-    @with_timelimit
+    @timeout
     def talk(self) -> str:
         comment: str = util.random_select(self.comments)
         self.logger.talk(comment=comment)
         return comment
 
-    @with_timelimit
+    @timeout
     @send_agent_index
     def vote(self) -> int:
         vote_target: int = util.get_index_from_name(
@@ -136,7 +118,7 @@ class Agent:
         self.logger.vote(vote_target=vote_target)
         return vote_target
 
-    @with_timelimit
+    @timeout
     def whisper(self) -> None:
         pass
 
