@@ -1,0 +1,9 @@
+Host aiwolf-server
+HostName 133.167.32.100
+User nwatanabe2
+IdentityFile ~/.ssh/id_ed25519
+RemoteForward 50000 localhost:50000
+RemoteForward 50001 localhost:50001
+RemoteForward 50002 localhost:50002
+RemoteForward 50003 localhost:50003
+RemoteForward 50004 localhost:50004
