@@ -1,11 +1,8 @@
 import configparser
 import errno
-import glob
 import os
 import random
 import re
-import shutil
-import time
 from pathlib import Path
 
 from aiwolf_nlp_common.role import RoleInfo

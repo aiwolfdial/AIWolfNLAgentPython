@@ -1,6 +1,4 @@
 import configparser
-import inspect
-import math
 from threading import Thread
 from typing import Callable
 
@@ -27,7 +25,7 @@ class Agent:
             self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
 
         with open(inifile.get("filePath", "random_talk"), "r", encoding="utf-8") as f:
-            self.comments: list = f.read().splitlines()
+            self.comments: list[str] = f.read().splitlines()
 
     @staticmethod
     def timeout(func: Callable):

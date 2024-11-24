@@ -21,6 +21,9 @@
 
 ## 環境構築
 
+> [!IMPORTANT]
+> Python 3.11以上が必要です。
+
 ```
 git clone https://github.com/kano-lab/aiwolf-nlp-agent.git
 cd AIWolfNLAgentPython
