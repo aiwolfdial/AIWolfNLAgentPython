@@ -30,6 +30,7 @@ cd aiwolf-nlp-agent
 python -m venv .venv
 source .venv/bin/activate
 pip install .
+cd src
 ```
 
 > [!NOTE]
