@@ -17,7 +17,7 @@ class Seer(Agent):
     ):
         super().__init__(inifile, name, log_info, is_hand_over)
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def parse_info(self, receive: str) -> None:
         return super().parse_info(receive)
 
@@ -33,15 +33,15 @@ class Seer(Agent):
     def daily_finish(self) -> None:
         return super().daily_finish()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def get_name(self) -> str:
         return super().get_name()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def get_role(self) -> str:
         return super().get_role()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def talk(self) -> str:
         if not self.protocol.info.divine_result.is_empty():
             self.logger.divine_result(
@@ -51,15 +51,15 @@ class Seer(Agent):
 
         return super().talk()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def vote(self) -> int:
         return super().vote()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     def whisper(self) -> None:
         return super().whisper()
 
-    @Agent.with_timelimit
+    @Agent.timeout
     @Agent.send_agent_index
     def divine(self) -> int:
         divine_target: int = util.get_index_from_name(
