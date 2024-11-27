@@ -63,24 +63,30 @@ python multi.py
 `res/config.ini` を主催者から提供された設定に変更してください。  
 
 ```
-python multi.py
+chmod +x infinite.sh
+./infinite.sh
 ```
 
 ## 設定
 
 ### [connection]
-`websocket`: WebSocketを使用して大戦サーバと通信を行うか設定します。
-`buffer`: 対戦サーバとの送受信の際に利用されるバッファサイズです。  
-`keep_connection`: **本戦の場合のみ** `true`にしてください。
+
+`websocket`: WebSocketを利用する場合は`true`にしてください。デフォルト値で問題ありません。  
+`buffer`: 送受信のバッファサイズです。デフォルト値で問題ありません。  
+`keep_connection`: game.num回のゲームを行ったあとにもう一度ゲームを行う場合は`true`にしてください。**本戦のみ`true`にしてください。**
+
+### [websocket]
+
+`uri`: ゲームサーバのURIです。ローカル内のゲームサーバに接続する場合はデフォルト値で問題ありません。
 
 ### [game]
 
-`num`: 連続で行うゲームの回数です。
+`num`: 連続でゲームを行う回数です。自己対戦の場合はデフォルト値で問題ありません。
 
 ### [agent]
 
-`num`: ゲームに参加するエージェントの人数です。  
-`name*`: *番目のエージェントの名前です。
+`num`: 起動するエージェントの数です。自己対戦の場合はデフォルト値で問題ありません。  
+`name*`: *番目のエージェントの名前です。基本的には参加登録時に登録した名前+数字で問題ありません。
 
 ```
 [connection]
@@ -97,43 +103,28 @@ num = 1
 [agent]
 num = 5
 name1 = kanolab1
-
+name2 = kanolab2
+name3 = kanolab3
+name4 = kanolab4
+name5 = kanolab5
 
 [filePath]
-log_inifile = ./res/log.ini
-random_talk = ./res/2019071_44011_AIWolfTalkLogs.txt
+log_inifile = ./src/res/log.ini
+random_talk = ./src/res/2019071_44011_AIWolfTalkLogs.txt
 ```
 
 ## ログの設定
 
-`res/log.ini.sample` を `res/log.ini` に名前を変更してください。  
+### [log]
 
-`storage_path`: エージェントのログを保存するパスの設定です
+`get_info`: ゲームサーバから取得したJsonをログに書き込むかどうかの設定です。  
+`initialize`: Initializeリクエストの時にゲームサーバから取得したJsonをログに書き込むかどうかの設定です。  
+`talk`: エージェントがゲームサーバに送信した`TALK`の内容ををログに書き込むかどうかの設定です。  
+`vote`: エージェントがゲームサーバに送信した`VOTE`の内容ををログに書き込むかどうかの設定です。  
+`divine`: エージェントがゲームサーバに送信した`DIVINE`の内容ををログに書き込むかどうかの設定です。  
+`divine_result`: ゲームサーバから取得した占いの結果をログに書き込むかどうかの設定です。  
+`attack`: エージェントがゲームサーバに送信した`ATTACK`の内容ををログに書き込むかどうかの設定です。  
 
-`get_info`\
-`true`:ゲームサーバから取得したJsonをログに書き込みます。\
-`false`:ログに書きません。
+### [path]
 
-`initialize` = true\
-`true`:initializeリクエストの時にゲームサーバから取得したJsonをログに書き込みます。\
-`false`:ログに書きません。
-
-`talk`\
-`true`:エージェントがゲームサーバに送信した`TALK`の内容ををログに書き込みます。\
-`false`:ログに書きません。
-
-`vote`\
-`true`:エージェントがゲームサーバに送信した`VOTE`の内容ををログに書き込みます。\
-`false`:ログに書きません。
-
-`divine`\
-`true`:エージェントがゲームサーバに送信した`DIVINE`の内容ををログに書き込みます。\
-`false`:ログに書きません。
-
-`divine_result`\
-`true`:ゲームサーバから取得した占いの結果をログに書き込みます。\
-`false`:ログに書きません。
-
-`attack`\
-`true`:エージェントがゲームサーバに送信した`ATTACK`の内容ををログに書き込みます。\
-`false`:ログに書きません。
+`storage_path`: エージェントのログを保存するパスの設定です。デフォルト値で問題ありません。
