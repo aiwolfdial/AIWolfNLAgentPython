@@ -82,7 +82,7 @@ class Agent:
     def get_info(self) -> None:
         if not hasattr(self, "protocol"):
             self.protocol = CommunicationProtocol.initialize_from_json(
-                received_str=self.received.pop(0)
+                received_str=self.received.pop(0),
             )
         else:
             self.protocol.update_from_json(received_str=self.received.pop(0))
