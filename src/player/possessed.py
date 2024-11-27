@@ -1,6 +1,12 @@
-import configparser
+from __future__ import annotations
 
-from lib.log import LogInfo
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import configparser
+
+    from utils.log_info import LogInfo
+
 from player.agent import Agent
 
 
@@ -11,13 +17,13 @@ class Possessed(Agent):
         name: str,
         log_info: LogInfo,
         is_hand_over: bool = False,
-    ):
+    ) -> None:
         super().__init__(inifile, name, log_info, is_hand_over)
 
-    def parse_info(self, receive: str) -> None:
+    def parse_info(self, receive: str | list[str]) -> None:
         return super().parse_info(receive)
 
-    def get_info(self):
+    def get_info(self) -> None:
         return super().get_info()
 
     def initialize(self) -> None:
@@ -52,5 +58,5 @@ class Possessed(Agent):
     def action(self) -> str:
         return super().action()
 
-    def hand_over(self, new_agent) -> None:
+    def hand_over(self, new_agent: Agent) -> None:
         return super().hand_over(new_agent)

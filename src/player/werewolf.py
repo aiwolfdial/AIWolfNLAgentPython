@@ -1,10 +1,18 @@
-import configparser
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import configparser
+
+    from utils.log_info import LogInfo
+
+import random
 
 from aiwolf_nlp_common import Action
 
-from lib import util
-from lib.log import LogInfo
 from player.agent import Agent
+from utils import agent_util
 
 
 class Werewolf(Agent):
@@ -14,13 +22,13 @@ class Werewolf(Agent):
         name: str,
         log_info: LogInfo,
         is_hand_over: bool = False,
-    ):
+    ) -> None:
         super().__init__(inifile, name, log_info, is_hand_over)
 
-    def parse_info(self, receive: str) -> None:
+    def parse_info(self, receive: str | list[str]) -> None:
         return super().parse_info(receive)
 
-    def get_info(self):
+    def get_info(self) -> None:
         return super().get_info()
 
     def initialize(self) -> None:
@@ -55,15 +63,16 @@ class Werewolf(Agent):
     @Agent.timeout
     @Agent.send_agent_index
     def attack(self) -> int:
-        attack_target: int = util.get_index_from_name(util.random_select(self.alive))
+        attack_target: int = agent_util.agent_name_to_idx(
+            random.choice(self.alive),  # noqa: S311
+        )
         self.logger.attack(attack_target=attack_target)
         return attack_target
 
     def action(self) -> str:
         if Action.is_attack(request=self.protocol.request):
             return self.attack()
-        else:
-            return super().action()
+        return super().action()
 
-    def hand_over(self, new_agent) -> None:
+    def hand_over(self, new_agent: Agent) -> None:
         return super().hand_over(new_agent)
