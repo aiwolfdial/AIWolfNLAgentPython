@@ -1,9 +1,17 @@
-import configparser
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import configparser
+
+    from lib.log_info import LogInfo
+
+import random
 
 from aiwolf_nlp_common import Action
 
 from lib import util
-from lib.log import LogInfo
 from player.agent import Agent
 
 
@@ -14,14 +22,13 @@ class Seer(Agent):
         name: str,
         log_info: LogInfo,
         is_hand_over: bool = False,
-    ):
+    ) -> None:
         super().__init__(inifile, name, log_info, is_hand_over)
 
-    @Agent.timeout
-    def parse_info(self, receive: str) -> None:
+    def parse_info(self, receive: str | list[str]) -> None:
         return super().parse_info(receive)
 
-    def get_info(self):
+    def get_info(self) -> None:
         return super().get_info()
 
     def initialize(self) -> None:
@@ -62,17 +69,14 @@ class Seer(Agent):
     @Agent.timeout
     @Agent.send_agent_index
     def divine(self) -> int:
-        divine_target: int = util.get_index_from_name(
-            agent_name=util.random_select(self.alive)
-        )
+        divine_target: int = util.agent_name_to_idx(name=random.choice(self.alive))
         self.logger.divine(divine_target=divine_target)
         return divine_target
 
     def action(self) -> str:
         if Action.is_divine(request=self.protocol.request):
             return self.divine()
-        else:
-            return super().action()
+        return super().action()
 
-    def hand_over(self, new_agent) -> None:
+    def hand_over(self, new_agent: Agent) -> None:
         return super().hand_over(new_agent)

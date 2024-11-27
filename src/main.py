@@ -1,68 +1,95 @@
+from __future__ import annotations
+
 import configparser
-from typing import Union
+import logging
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from lib.log_info import LogInfo
+
+if TYPE_CHECKING:
+    from configparser import ConfigParser
+
+from time import sleep
 
 from aiwolf_nlp_common import Action, util
-from aiwolf_nlp_common.connection.ssh import SSHServer
-from aiwolf_nlp_common.connection.tcp import TCPClient, TCPServer
-from aiwolf_nlp_common.connection.websocket import WebSocketClient
 
 import lib
 import player
-from lib.log import LogInfo
+
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 
-def main(
-    sock: Union[TCPServer, TCPClient, SSHServer, WebSocketClient],
-    inifile: configparser.ConfigParser,
-    received: list,
-    name: str,
+def run_agent(
+    idx: int,
+    config: ConfigParser,
     log_info: LogInfo,
-):
-    agent = player.agent.Agent(inifile=inifile, name=name, log_info=log_info)
-    if received != None:
-        agent.set_received(received=received)
+) -> None:
+    sock = util.get_socket(inifile=config, name=config.get("agent", f"name{idx}"))
+    name = config.get("agent", f"name{idx}")
+    while True:
+        try:
+            sock.connect()
+            logger.info("エージェント %s がゲームサーバに接続しました", name)
+            break
+        except Exception:  # noqa: BLE001
+            sleep(15)
+            logger.warning("エージェント %s がゲームサーバに接続できませんでした", name)
+            logger.info("再接続を試みます")
 
-    while agent.gameContinue:
+    agent = player.agent.Agent(config=config, name=name, log_info=log_info)
+    while not agent.is_finish:
         if len(agent.received) == 0:
-            agent.parse_info(receive=sock.receive())
-
+            receive = sock.receive()
+            if isinstance(receive, (str, list)):
+                agent.parse_info(receive=receive)
         agent.get_info()
         message = agent.action()
-
         if Action.is_initialize(request=agent.protocol.request):
             agent = lib.util.init_role(
-                agent=agent, inifile=inifile, name=name, log_info=log_info
+                agent=agent, inifile=config, name=name, log_info=log_info
             )
-
         if message != "":
             sock.send(message=message)
 
-    return agent.received if len(agent.received) != 0 else None
+    sock.close()
+    logger.info("エージェント %s とゲームサーバの接続を切断しました", name)
 
 
-if __name__ == "__main__":
-    config_path = "./res/config.ini"
-
-    inifile = util.read_config_file(config_file_path=config_path)
-
-    log_info = LogInfo()
-
+def execute(
+    idx: int,
+    config: ConfigParser,
+    log_info: LogInfo,
+) -> None:
     while True:
-        sock = util.get_socket(inifile=inifile, name=inifile.get("agent", "name1"))
-        sock.connect()
-
-        received = None
-
-        for _ in range(inifile.getint("game", "num")):
-            received = main(
-                sock=sock,
-                inifile=inifile,
-                received=received,
-                name=inifile.get("agent", "name1"),
+        for _ in range(config.getint("game", "num")):
+            run_agent(
+                idx=idx,
+                config=config,
                 log_info=log_info,
             )
 
-        sock.close()
-
-        if not inifile.getboolean("connection", "keep_connection"):
+        if not config.getboolean("connection", "keep_connection"):
             break
+
+
+if __name__ == "__main__":
+    config_path = "./src/res/config.ini"
+    if Path(config_path).exists():
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        logger.info("設定ファイルを読み込みました")
+    else:
+        raise FileNotFoundError(config_path, "設定ファイルが見つかりません")
+    log_info = LogInfo()
+
+    execute(
+        1,
+        config,
+        log_info,
+    )

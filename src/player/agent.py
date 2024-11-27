@@ -1,79 +1,84 @@
-import configparser
+from __future__ import annotations
+
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from lib.agent_log import AgentLog
+
+if TYPE_CHECKING:
+    import configparser
+
+    from lib.log_info import LogInfo
+
+import random
 from threading import Thread
 from typing import Callable
 
 from aiwolf_nlp_common import Action, util
 from aiwolf_nlp_common.protocol import CommunicationProtocol
 
-from lib.log import AgentLog, LogInfo
-
 
 class Agent:
     def __init__(
         self,
-        inifile: configparser.ConfigParser,
+        config: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
         is_hand_over: bool = False,
-    ):
+    ) -> None:
         self.name: str = name
-        self.received: list = []
+        self.received: list[str] = []
         self.time_limit: int = 0
-        self.gameContinue: bool = True
+        self.is_finish: bool = False
 
         if not is_hand_over:
-            self.logger = AgentLog(inifile=inifile, agent_name=name, log_info=log_info)
+            self.logger = AgentLog(config=config, agent_name=name, log_info=log_info)
 
-        with open(inifile.get("filePath", "random_talk"), "r", encoding="utf-8") as f:
+        with Path.open(
+            Path(config.get("filePath", "random_talk")), encoding="utf-8"
+        ) as f:
             self.comments: list[str] = f.read().splitlines()
 
     @staticmethod
-    def timeout(func: Callable):
-        def _wrapper(self, *args, **kwargs):
-            result = None
+    def timeout(func: Callable) -> Callable:
+        def _wrapper(self, *args, **kwargs) -> None:  # noqa: ANN001, ANN002, ANN003
+            res = None
 
-            def execute_with_timeout():
-                nonlocal result
+            def execute_with_timeout() -> None:
+                nonlocal res
                 try:
-                    result = func(self, *args, **kwargs)
-                except Exception as e:
-                    result = e
+                    res = func(self, *args, **kwargs)
+                except Exception as e:  # noqa: BLE001
+                    res = e
 
             thread = Thread(target=execute_with_timeout, daemon=True)
             thread.start()
             thread.join(timeout=self.time_limit)
 
-            if isinstance(result, Exception):
-                raise result
+            if isinstance(res, Exception):
+                raise res
 
-            return result
-
-        return _wrapper
-
-    def send_agent_index(func: Callable):
-        def _wrapper(self, *args, **keywords):
-            # execute function
-            if len(keywords) == 0:
-                result: int = func(self)
-            else:
-                result: int = func(self, *args, **keywords)
-
-            if type(result) is not int:
-                raise ValueError(
-                    "Functions with the send_agent_index decorator must return an int type"
-                )
-
-            return util.get_name_from_index(agent_index=result)
+            return res
 
         return _wrapper
 
-    def set_received(self, received: list) -> None:
-        self.received = received
+    @staticmethod
+    def send_agent_index(func: Callable) -> Callable:
+        def _wrapper(self, *args, **kwargs) -> str:  # noqa: ANN001, ANN002, ANN003
+            res = func(self, *args, **kwargs)
+            if type(res) is not int:
+                raise ValueError(res, "is not int")
+            return util.get_name_from_index(agent_index=res)
 
-    def parse_info(self, receive: str) -> None:
-        self.received = receive
+        return _wrapper
 
-    def get_info(self):
+    def parse_info(self, receive: str | list[str]) -> None:
+        if type(receive) is str:
+            self.received.append(receive)
+        elif type(receive) is list:
+            self.received.extend(receive)
+
+    def get_info(self) -> None:
         if not hasattr(self, "protocol"):
             self.protocol = CommunicationProtocol.initialize_from_json(
                 received_str=self.received.pop(0)
@@ -104,7 +109,7 @@ class Agent:
 
     @timeout
     def talk(self) -> str:
-        comment: str = util.random_select(self.comments)
+        comment: str = random.choice(self.comments)
         self.logger.talk(comment=comment)
         return comment
 
@@ -112,7 +117,7 @@ class Agent:
     @send_agent_index
     def vote(self) -> int:
         vote_target: int = util.get_index_from_name(
-            agent_name=util.random_select(self.alive)
+            agent_name=random.choice(self.alive)
         )
         self.logger.vote(vote_target=vote_target)
         return vote_target
@@ -121,8 +126,8 @@ class Agent:
     def whisper(self) -> None:
         pass
 
-    def finish(self) -> str:
-        self.gameContinue = False
+    def finish(self) -> None:
+        self.is_finish = True
         if self.logger.is_write:
             self.logger.close()
 
@@ -148,16 +153,12 @@ class Agent:
 
         return ""
 
-    def hand_over(self, new_agent) -> None:
-        # __init__
+    def hand_over(self, new_agent: Agent) -> None:
         new_agent.name = self.name
         new_agent.received = self.received
-        new_agent.gameContinue = self.gameContinue
         new_agent.comments = self.comments
-        new_agent.received = self.received
         new_agent.logger = self.logger
 
-        # get_info
         if hasattr(self, "gameInfo"):
             new_agent.gameInfo = self.gameInfo
 
@@ -172,7 +173,6 @@ class Agent:
 
         new_agent.request = self.protocol.request
 
-        # initialize
         new_agent.index = self.index
         new_agent.role = self.role
         new_agent.time_limit = self.time_limit

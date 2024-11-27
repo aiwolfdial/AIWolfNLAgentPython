@@ -1,56 +1,48 @@
 import configparser
+import logging
 import multiprocessing
-
-from aiwolf_nlp_common import util
+from pathlib import Path
 
 import main
-from lib.log import LogInfo
+from lib.log_info import LogInfo
 
-
-def execute_game(inifile: configparser.ConfigParser, name: str, log_info: LogInfo):
-    while True:
-        sock = util.get_socket(inifile=inifile, name=name)
-        sock.connect()
-
-        received = None
-
-        for _ in range(inifile.getint("game", "num")):
-            received = main.main(
-                sock=sock,
-                inifile=inifile,
-                received=received,
-                name=name,
-                log_info=log_info,
-            )
-
-        sock.close()
-
-        if not inifile.getboolean("connection", "keep_connection"):
-            break
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
 
-    config_path = "./res/config.ini"
-
-    inifile = util.read_config_file(config_file_path=config_path)
-
+    config_path = "./src/res/config.ini"
+    if Path(config_path).exists():
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        logger.info("設定ファイルを読み込みました")
+    else:
+        raise FileNotFoundError(config_path, "設定ファイルが見つかりません")
     log_info = LogInfo()
 
-    agent_num = int(inifile.get("agent", "num"))
-    processes = list()
+    agent_num = int(config.get("agent", "num"))
+    logger.info("エージェント数: %d", agent_num)
 
-    print("agent_num:" + str(agent_num))
-
+    processes = []
     for i in range(agent_num):
         process = multiprocessing.Process(
             name="p" + str(i + 1),
-            target=execute_game,
-            args=(inifile, inifile.get("agent", "name" + str(i + 1)), log_info),
+            target=main.execute,
+            args=(
+                i + 1,
+                config,
+                log_info,
+            ),
         )
         processes.append(process)
-        processes[i].start()
+        process.start()
+        logger.info("エージェント %d を起動しました", i + 1)
 
     for process in processes:
         process.join()
