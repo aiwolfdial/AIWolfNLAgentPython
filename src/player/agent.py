@@ -3,12 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from lib.agent_log import AgentLog
+from utils.agent_log import AgentLog
 
 if TYPE_CHECKING:
     import configparser
 
-    from lib.log_info import LogInfo
+    from utils.log_info import LogInfo
 
 import random
 from threading import Thread
@@ -35,7 +35,8 @@ class Agent:
             self.logger = AgentLog(config=config, agent_name=name, log_info=log_info)
 
         with Path.open(
-            Path(config.get("filePath", "random_talk")), encoding="utf-8"
+            Path(config.get("filePath", "random_talk")),
+            encoding="utf-8",
         ) as f:
             self.comments: list[str] = f.read().splitlines()
 
@@ -109,7 +110,7 @@ class Agent:
 
     @timeout
     def talk(self) -> str:
-        comment: str = random.choice(self.comments)
+        comment: str = random.choice(self.comments)  # noqa: S311
         self.logger.talk(comment=comment)
         return comment
 
@@ -117,7 +118,7 @@ class Agent:
     @send_agent_index
     def vote(self) -> int:
         vote_target: int = util.get_index_from_name(
-            agent_name=random.choice(self.alive)
+            agent_name=random.choice(self.alive),  # noqa: S311
         )
         self.logger.vote(vote_target=vote_target)
         return vote_target

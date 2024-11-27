@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import configparser
 
-    from lib.log_info import LogInfo
+    from utils.log_info import LogInfo
 
 import random
 
 from aiwolf_nlp_common import Action
 
-from lib import util
 from player.agent import Agent
+from utils import agent_util
 
 
 class Seer(Agent):
@@ -69,7 +69,9 @@ class Seer(Agent):
     @Agent.timeout
     @Agent.send_agent_index
     def divine(self) -> int:
-        divine_target: int = util.agent_name_to_idx(name=random.choice(self.alive))
+        divine_target: int = agent_util.agent_name_to_idx(
+            name=random.choice(self.alive),  # noqa: S311
+        )
         self.logger.divine(divine_target=divine_target)
         return divine_target
 

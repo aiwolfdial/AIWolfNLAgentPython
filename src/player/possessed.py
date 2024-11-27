@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import configparser
 
-    from lib.log_info import LogInfo
+    from utils.log_info import LogInfo
 
 from player.agent import Agent
 

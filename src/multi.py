@@ -4,7 +4,7 @@ import multiprocessing
 from pathlib import Path
 
 import main
-from lib.log_info import LogInfo
+from utils.log_info import LogInfo
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()

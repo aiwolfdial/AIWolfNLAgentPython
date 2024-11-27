@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     import configparser
 
-    from lib.log_info import LogInfo
+    from utils.log_info import LogInfo
 
 import random
 
 from aiwolf_nlp_common import Action
 
-from lib import util
 from player.agent import Agent
+from utils import agent_util
 
 
 class Werewolf(Agent):
@@ -63,7 +63,9 @@ class Werewolf(Agent):
     @Agent.timeout
     @Agent.send_agent_index
     def attack(self) -> int:
-        attack_target: int = util.agent_name_to_idx(random.choice(self.alive))
+        attack_target: int = agent_util.agent_name_to_idx(
+            random.choice(self.alive),  # noqa: S311
+        )
         self.logger.attack(attack_target=attack_target)
         return attack_target
 

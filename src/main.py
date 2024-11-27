@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from lib.log_info import LogInfo
+from utils.log_info import LogInfo
 
 if TYPE_CHECKING:
     from configparser import ConfigParser
@@ -14,8 +14,8 @@ from time import sleep
 
 from aiwolf_nlp_common import Action, util
 
-import lib
 import player
+import utils
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -51,8 +51,11 @@ def run_agent(
         agent.get_info()
         message = agent.action()
         if Action.is_initialize(request=agent.protocol.request):
-            agent = lib.util.init_role(
-                agent=agent, inifile=config, name=name, log_info=log_info
+            agent = utils.agent_util.init_role(
+                agent=agent,
+                inifile=config,
+                name=name,
+                log_info=log_info,
             )
         if message != "":
             sock.send(message=message)
