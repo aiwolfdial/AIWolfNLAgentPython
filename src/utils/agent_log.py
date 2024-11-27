@@ -45,14 +45,24 @@ class AgentLog(Log):
             current_time.strftime("%m-%d"),
         )
 
+        dir_num = 0
         if log_info.log_times_num == 0:
-            dir_num: int = (
-                len([d.name for d in self.log_month_day_dir.iterdir() if d.is_dir()])
-                + 1
-            )
+            if self.log_month_day_dir.exists():
+                dir_num = (
+                    len(
+                        [
+                            d.name
+                            for d in self.log_month_day_dir.iterdir()
+                            if d.is_dir()
+                        ],
+                    )
+                    + 1
+                )
+            else:
+                dir_num = 1
             log_info.log_times_num = dir_num
         else:
-            dir_num: int = log_info.log_times_num
+            dir_num = log_info.log_times_num
 
         self.log_times = Path.joinpath(self.log_month_day_dir, str(dir_num))
         self.log_file_path = Path.joinpath(
