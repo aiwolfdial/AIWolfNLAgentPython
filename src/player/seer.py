@@ -18,12 +18,12 @@ from utils import agent_util
 class Seer(Agent):
     def __init__(
         self,
-        inifile: configparser.ConfigParser,
+        config: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
         is_hand_over: bool = False,
     ) -> None:
-        super().__init__(inifile, name, log_info, is_hand_over)
+        super().__init__(config, name, log_info, is_hand_over)
 
     def parse_info(self, receive: str | list[str]) -> None:
         return super().parse_info(receive)
@@ -50,9 +50,11 @@ class Seer(Agent):
 
     @Agent.timeout
     def talk(self) -> str:
+        if self.protocol.info is None:
+            return super().talk()
         if not self.protocol.info.divine_result.is_empty():
             self.logger.divine_result(
-                divine_result=self.protocol.info.divine_result.result
+                divine_result=self.protocol.info.divine_result.result,
             )
             return self.protocol.info.divine_result.result
 

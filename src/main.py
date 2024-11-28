@@ -12,7 +12,8 @@ if TYPE_CHECKING:
 
 from time import sleep
 
-from aiwolf_nlp_common import Action, util
+from aiwolf_nlp_common import Action
+from aiwolf_nlp_common.client.websocket import WebSocketClient
 
 import player
 import utils
@@ -30,11 +31,13 @@ def run_agent(
     config: ConfigParser,
     log_info: LogInfo,
 ) -> None:
-    sock = util.get_socket(inifile=config, name=config.get("agent", f"name{idx}"))
+    client = WebSocketClient(
+        url=config.get("connection", "url"),
+    )
     name = config.get("agent", f"name{idx}")
     while True:
         try:
-            sock.connect()
+            client.connect()
             logger.info("エージェント %s がゲームサーバに接続しました", name)
             break
         except Exception:  # noqa: BLE001
@@ -45,11 +48,11 @@ def run_agent(
     agent = player.agent.Agent(config=config, name=name, log_info=log_info)
     while not agent.is_finish:
         if len(agent.received) == 0:
-            receive = sock.receive()
+            receive = client.receive()
             if isinstance(receive, (str, list)):
                 agent.parse_info(receive=receive)
         agent.get_info()
-        message = agent.action()
+        req = agent.action()
         if Action.is_initialize(request=agent.protocol.request):
             agent = utils.agent_util.init_role(
                 agent=agent,
@@ -57,10 +60,10 @@ def run_agent(
                 name=name,
                 log_info=log_info,
             )
-        if message != "":
-            sock.send(message=message)
+        if req != "":
+            client.send(req=req)
 
-    sock.close()
+    client.close()
     logger.info("エージェント %s とゲームサーバの接続を切断しました", name)
 
 

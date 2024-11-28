@@ -4,9 +4,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from utils.agent_log import AgentLog
+from utils.agent_util import agent_idx_to_agent, agent_name_to_idx
 
 if TYPE_CHECKING:
     import configparser
+
+    from aiwolf_nlp_common.role import Role
 
     from utils.log_info import LogInfo
 
@@ -14,7 +17,7 @@ import random
 from threading import Thread
 from typing import Callable
 
-from aiwolf_nlp_common import Action, util
+from aiwolf_nlp_common import Action
 from aiwolf_nlp_common.protocol import CommunicationProtocol
 
 
@@ -69,7 +72,7 @@ class Agent:
             res = func(self, *args, **kwargs)
             if type(res) is not int:
                 raise ValueError(res, "is not int")
-            return util.get_name_from_index(agent_index=res)
+            return agent_idx_to_agent(idx=res)
 
         return _wrapper
 
@@ -82,19 +85,23 @@ class Agent:
     def get_info(self) -> None:
         if not hasattr(self, "protocol"):
             self.protocol = CommunicationProtocol.initialize_from_json(
-                received_str=self.received.pop(0)
+                value=self.received.pop(0),
             )
         else:
-            self.protocol.update_from_json(received_str=self.received.pop(0))
+            self.protocol.update_from_json(value=self.received.pop(0))
 
     def initialize(self) -> None:
+        if self.protocol.info is None or self.protocol.setting is None:
+            return
         self.agent_name: str = self.protocol.info.agent
-        self.index: int = util.get_index_from_name(agent_name=self.agent_name)
+        self.index: int = agent_name_to_idx(name=self.agent_name)
 
         self.time_limit: int = self.protocol.setting.action_timeout
-        self.role: str = self.protocol.info.role_map.get_role(agent=self.agent_name)
+        self.role: Role = self.protocol.info.role_map.get_role(agent=self.agent_name)
 
     def daily_initialize(self) -> None:
+        if self.protocol.info is None:
+            return
         self.alive: list = self.protocol.info.status_map.get_alive_agent_list()
 
     def daily_finish(self) -> None:
@@ -105,7 +112,7 @@ class Agent:
         return self.name
 
     @timeout
-    def get_role(self) -> str:
+    def get_role(self) -> Role:
         return self.role
 
     @timeout
@@ -117,8 +124,8 @@ class Agent:
     @timeout
     @send_agent_index
     def vote(self) -> int:
-        vote_target: int = util.get_index_from_name(
-            agent_name=random.choice(self.alive),  # noqa: S311
+        vote_target: int = agent_name_to_idx(
+            name=random.choice(self.alive),  # noqa: S311
         )
         self.logger.vote(vote_target=vote_target)
         return vote_target
@@ -176,4 +183,5 @@ class Agent:
 
         new_agent.index = self.index
         new_agent.role = self.role
+        new_agent.time_limit = self.time_limit
         new_agent.time_limit = self.time_limit

@@ -25,7 +25,8 @@ class LogInfo:
             raise ValueError(time, "is not datetime.datetime")
 
         self.__game_start_time.value = bytes(
-            time.strftime(LogInfo.format), LogInfo.encode
+            time.strftime(LogInfo.format),
+            LogInfo.encode,
         )
 
     @property

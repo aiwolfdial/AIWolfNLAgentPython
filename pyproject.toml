@@ -6,7 +6,7 @@ license = { file = "LICENSE" }
 requires-python = ">=3.8"
 readme = "README.md"
 dependencies = [
-    "aiwolf-nlp-common>=0.2.2",
+    "paramiko>=3.5.0",
 ]
 authors = [
     { name = "aiwolfdial", email = "aiwolf@kanolab.net" },
