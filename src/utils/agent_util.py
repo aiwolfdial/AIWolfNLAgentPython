@@ -15,21 +15,21 @@ def init_role(
 ) -> player.agent.Agent:
     if RoleInfo.is_villager(role=agent.role):
         new_agent = player.villager.Villager(
-            inifile=inifile,
+            config=inifile,
             name=name,
             log_info=log_info,
             is_hand_over=True,
         )
     elif RoleInfo.is_werewolf(role=agent.role):
         new_agent = player.werewolf.Werewolf(
-            inifile=inifile,
+            config=inifile,
             name=name,
             log_info=log_info,
             is_hand_over=True,
         )
     elif RoleInfo.is_seer(role=agent.role):
         new_agent = player.seer.Seer(
-            inifile=inifile,
+            config=inifile,
             name=name,
             log_info=log_info,
             is_hand_over=True,

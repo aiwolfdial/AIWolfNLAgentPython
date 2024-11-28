@@ -11,12 +11,13 @@ from player.agent import Agent
 
 
 class Possessed(Agent):
+
     def __init__(
         self,
         inifile: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
-        is_hand_over: bool = False,
+        is_hand_over: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         super().__init__(inifile, name, log_info, is_hand_over)
 

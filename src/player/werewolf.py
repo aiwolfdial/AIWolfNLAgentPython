@@ -16,14 +16,15 @@ from utils import agent_util
 
 
 class Werewolf(Agent):
+
     def __init__(
         self,
-        inifile: configparser.ConfigParser,
+        config: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
-        is_hand_over: bool = False,
+        is_hand_over: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
-        super().__init__(inifile, name, log_info, is_hand_over)
+        super().__init__(config, name, log_info, is_hand_over)
 
     def parse_info(self, receive: str | list[str]) -> None:
         return super().parse_info(receive)

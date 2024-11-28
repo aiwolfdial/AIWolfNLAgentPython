@@ -17,15 +17,16 @@ class LogInfo:
 
     @property
     def game_start_time(self) -> str:
-        return self.__game_start_time.value.decode()
+        return self.__game_start_time.value.decode()  # type: ignore  # noqa: PGH003
 
     @game_start_time.setter
     def game_start_time(self, time: datetime.datetime) -> ValueError | None:
         if type(time) is not datetime.datetime:
             raise ValueError(time, "is not datetime.datetime")
 
-        self.__game_start_time.value = bytes(
-            time.strftime(LogInfo.format), LogInfo.encode
+        self.__game_start_time.value = bytes(  # type: ignore  # noqa: PGH003
+            time.strftime(LogInfo.format),
+            LogInfo.encode,
         )
 
     @property

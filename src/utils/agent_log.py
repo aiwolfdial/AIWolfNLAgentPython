@@ -19,7 +19,7 @@ class AgentLog(Log):
         agent_name: str,
         log_info: LogInfo,
     ) -> None:
-        log_config_path = config.get("filePath", "log_inifile")
+        log_config_path = config.get("path", "log_config")
         if Path(log_config_path).exists():
             log_config = configparser.ConfigParser()
             log_config.read(log_config_path)
@@ -39,7 +39,7 @@ class AgentLog(Log):
         log_info.increment_log_num()
 
         self.is_write = log_config.getboolean("log", "write")
-        self.log_dir_path = Path(log_config.get("path", "storage_path"))
+        self.log_dir_path = Path(log_config.get("path", "output_dir"))
         self.log_month_day_dir = Path.joinpath(
             self.log_dir_path,
             current_time.strftime("%m-%d"),
