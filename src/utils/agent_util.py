@@ -9,34 +9,34 @@ from utils.log_info import LogInfo
 
 def init_role(
     agent: player.agent.Agent,
-    inifile: configparser.ConfigParser,
+    config: configparser.ConfigParser,
     name: str,
     log_info: LogInfo,
 ) -> player.agent.Agent:
     if RoleInfo.is_villager(role=agent.role):
         new_agent = player.villager.Villager(
-            config=inifile,
+            config=config,
             name=name,
             log_info=log_info,
             is_hand_over=True,
         )
     elif RoleInfo.is_werewolf(role=agent.role):
         new_agent = player.werewolf.Werewolf(
-            config=inifile,
+            config=config,
             name=name,
             log_info=log_info,
             is_hand_over=True,
         )
     elif RoleInfo.is_seer(role=agent.role):
         new_agent = player.seer.Seer(
-            config=inifile,
+            config=config,
             name=name,
             log_info=log_info,
             is_hand_over=True,
         )
     elif RoleInfo.is_possessed(role=agent.role):
         new_agent = player.possessed.Possessed(
-            config=inifile,
+            config=config,
             name=name,
             log_info=log_info,
             is_hand_over=True,

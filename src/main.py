@@ -43,9 +43,9 @@ def run_agent(
             logger.info("エージェント %s がゲームサーバに接続しました", name)
             break
         except Exception:  # noqa: BLE001
-            sleep(15)
             logger.warning("エージェント %s がゲームサーバに接続できませんでした", name)
             logger.info("再接続を試みます")
+            sleep(15)
 
     agent = player.agent.Agent(config=config, name=name, log_info=log_info)
     while not agent.is_finish:
@@ -58,7 +58,7 @@ def run_agent(
         if Action.is_initialize(request=agent.protocol.request):
             agent = utils.agent_util.init_role(
                 agent=agent,
-                inifile=config,
+                config=config,
                 name=name,
                 log_info=log_info,
             )
