@@ -16,12 +16,13 @@ from utils import agent_util
 
 
 class Seer(Agent):
+
     def __init__(
         self,
         config: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
-        is_hand_over: bool = False,
+        is_hand_over: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         super().__init__(config, name, log_info, is_hand_over)
 

@@ -9,4 +9,4 @@ divine_result = true
 attack = true
 
 [path]
-storage_path = ./log
+output_dir = ./log

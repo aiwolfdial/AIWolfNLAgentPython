@@ -27,18 +27,23 @@ class Agent:
         config: configparser.ConfigParser,
         name: str,
         log_info: LogInfo,
-        is_hand_over: bool = False,
+        is_hand_over: bool = False,  # noqa: FBT001, FBT002
     ) -> None:
         self.name: str = name
         self.received: list[str] = []
         self.time_limit: int = 0
         self.is_finish: bool = False
+        self.gameInfo = None
+        self.gameSetting = None
+        self.talkHistory = None
+        self.whisperHistory = None
+        self.request = None
 
         if not is_hand_over:
             self.logger = AgentLog(config=config, agent_name=name, log_info=log_info)
 
         with Path.open(
-            Path(config.get("filePath", "random_talk")),
+            Path(config.get("path", "random_talk")),
             encoding="utf-8",
         ) as f:
             self.comments: list[str] = f.read().splitlines()

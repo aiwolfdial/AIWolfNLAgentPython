@@ -1,13 +1,11 @@
 [project]
 name = "aiwolf-nlp-agent"
-version = "0.1.0"
+version = "0.2.0"
 description = "aiwolf-nlp-agent"
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 readme = "README.md"
-dependencies = [
-    "paramiko>=3.5.0",
-]
+dependencies = ["aiwolf-nlp-common==0.3.2"]
 authors = [
     { name = "aiwolfdial", email = "aiwolf@kanolab.net" },
     { name = "nwatanabe", email = "nwatanabe@kanolab.net" },

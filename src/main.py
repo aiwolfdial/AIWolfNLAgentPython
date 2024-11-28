@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 from time import sleep
 
 from aiwolf_nlp_common import Action
+from aiwolf_nlp_common.client import Client
+from aiwolf_nlp_common.client.tcp import TCPClient
 from aiwolf_nlp_common.client.websocket import WebSocketClient
 
 import player
@@ -31,8 +33,9 @@ def run_agent(
     config: ConfigParser,
     log_info: LogInfo,
 ) -> None:
+    client: Client
     client = WebSocketClient(
-        url=config.get("connection", "url"),
+        url=config.get("websocket", "url"),
     )
     name = config.get("agent", f"name{idx}")
     while True:
@@ -85,7 +88,7 @@ def execute(
 
 
 if __name__ == "__main__":
-    config_path = "./src/res/config.ini"
+    config_path = "./res/config.ini"
     if Path(config_path).exists():
         config = configparser.ConfigParser()
         config.read(config_path)

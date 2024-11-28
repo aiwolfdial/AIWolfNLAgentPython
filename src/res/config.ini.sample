@@ -1,10 +1,5 @@
-[connection]
-websocket = true
-buffer = 2048
-keep_connection = false
-
 [websocket]
-uri = ws://127.0.0.1:8080/ws
+url = ws://127.0.0.1:8080/ws
 
 [game]
 num = 1
@@ -17,6 +12,6 @@ name3 = kanolab3
 name4 = kanolab4
 name5 = kanolab5
 
-[filePath]
-log_inifile = ./src/res/log.ini
-random_talk = ./src/res/2019071_44011_AIWolfTalkLogs.txt
+[path]
+log_config = ./res/log.ini
+random_talk = ./res/2019071_44011_AIWolfTalkLogs.txt
