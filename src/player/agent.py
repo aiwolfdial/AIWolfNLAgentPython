@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from utils import agent_util
 from utils.agent_log import AgentLog
-from utils.agent_util import agent_idx_to_agent, agent_name_to_idx
 
 if TYPE_CHECKING:
     import configparser
@@ -18,7 +19,7 @@ from threading import Thread
 from typing import Callable
 
 from aiwolf_nlp_common import Action
-from aiwolf_nlp_common.protocol import CommunicationProtocol
+from aiwolf_nlp_common.protocol import Packet
 
 
 class Agent:
@@ -77,7 +78,7 @@ class Agent:
             res = func(self, *args, **kwargs)
             if type(res) is not int:
                 raise ValueError(res, "is not int")
-            return agent_idx_to_agent(idx=res)
+            return agent_util.agent_idx_to_agent(idx=res)
 
         return _wrapper
 
@@ -88,18 +89,19 @@ class Agent:
             self.received.extend(receive)
 
     def get_info(self) -> None:
+        value = json.loads(self.received.pop(0))
         if not hasattr(self, "protocol"):
-            self.protocol = CommunicationProtocol.initialize_from_json(
-                value=self.received.pop(0),
+            self.protocol = Packet(
+                value=value,
             )
         else:
-            self.protocol.update_from_json(value=self.received.pop(0))
+            self.protocol.update(value=value)
 
     def initialize(self) -> None:
         if self.protocol.info is None or self.protocol.setting is None:
             return
         self.agent_name: str = self.protocol.info.agent
-        self.index: int = agent_name_to_idx(name=self.agent_name)
+        self.index: int = agent_util.agent_name_to_idx(name=self.agent_name)
 
         self.time_limit: int = self.protocol.setting.action_timeout
         self.role: Role = self.protocol.info.role_map.get_role(agent=self.agent_name)
@@ -129,7 +131,7 @@ class Agent:
     @timeout
     @send_agent_index
     def vote(self) -> int:
-        vote_target: int = agent_name_to_idx(
+        vote_target: int = agent_util.agent_name_to_idx(
             name=random.choice(self.alive),  # noqa: S311
         )
         self.logger.vote(vote_target=vote_target)

@@ -22,6 +22,12 @@
 ## 環境構築
 
 > [!IMPORTANT]
+> ライブラリのリファクタリングなどに伴い、コードの修正を実施中です。
+> 修正前のコードの動作確認は実施済みになりますが、一部コードに警告が表示される可能性があります。
+> こちらのコードはリファクタリング後のコードになります。問題がある場合は、v0.1.0をご利用ください。
+> [v0.1.0](https://github.com/kano-lab/aiwolf-nlp-agent/tree/v0.1.0)をご参照ください。
+
+> [!IMPORTANT]
 > Python 3.11以上が必要です。
 
 ```
@@ -45,8 +51,8 @@ cd src
 [kano-lab/aiwolf-nlp-server](https://github.com/kano-lab/aiwolf-nlp-server) を参考にしてください。
 
 ```
-cp res/config.ini.sample res/config.ini
-cp res/log.ini.sample res/log.ini
+cp res/config.ini.example res/config.ini
+cp res/log.ini.example res/log.ini
 python multi.py
 ```
 
@@ -67,17 +73,15 @@ chmod +x infinite.sh
 ./infinite.sh
 ```
 
-## 設定
-
-### [connection]
-
-`websocket`: WebSocketを利用する場合は`true`にしてください。デフォルト値で問題ありません。  
-`buffer`: 送受信のバッファサイズです。デフォルト値で問題ありません。  
-`keep_connection`: game.num回のゲームを行ったあとにもう一度ゲームを行う場合は`true`にしてください。**本戦のみ`true`にしてください。**
+## 設定 (config.ini)
 
 ### [websocket]
 
-`uri`: ゲームサーバのURIです。ローカル内のゲームサーバに接続する場合はデフォルト値で問題ありません。
+`url`: ゲームサーバのURLです。ローカル内のゲームサーバに接続する場合はデフォルト値で問題ありません。
+
+### [connection]
+
+`keep_connection`: game.num回のゲームを行ったあとにもう一度ゲームを行う場合は`true`にしてください。**本戦のみ`true`にしてください。**
 
 ### [game]
 
@@ -89,13 +93,11 @@ chmod +x infinite.sh
 `name*`: *番目のエージェントの名前です。基本的には参加登録時に登録した名前+数字で問題ありません。
 
 ```
-[connection]
-websocket = true
-buffer = 2048
-keep_connection = false
-
 [websocket]
-uri = ws://127.0.0.1:8080/ws
+url = ws://127.0.0.1:8080/ws
+
+[connection]
+keep_connection = false
 
 [game]
 num = 1
@@ -108,12 +110,12 @@ name3 = kanolab3
 name4 = kanolab4
 name5 = kanolab5
 
-[filePath]
-log_inifile = ./res/log.ini
+[path]
+log_config = ./res/log.ini
 random_talk = ./res/2019071_44011_AIWolfTalkLogs.txt
 ```
 
-## ログの設定
+## ログの設定 (log.ini)
 
 ### [log]
 
@@ -127,4 +129,4 @@ random_talk = ./res/2019071_44011_AIWolfTalkLogs.txt
 
 ### [path]
 
-`storage_path`: エージェントのログを保存するパスの設定です。デフォルト値で問題ありません。
+`output_dir`: エージェントのログを保存するパスの設定です。デフォルト値で問題ありません。
