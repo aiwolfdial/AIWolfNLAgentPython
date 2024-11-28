@@ -36,7 +36,7 @@ def init_role(
         )
     elif RoleInfo.is_possessed(role=agent.role):
         new_agent = player.possessed.Possessed(
-            inifile=inifile,
+            config=inifile,
             name=name,
             log_info=log_info,
             is_hand_over=True,
