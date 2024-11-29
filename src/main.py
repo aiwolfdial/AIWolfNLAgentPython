@@ -42,8 +42,9 @@ def run_agent(
             client.connect()
             logger.info("エージェント %s がゲームサーバに接続しました", name)
             break
-        except Exception:  # noqa: BLE001
+        except Exception as ex:  # noqa: BLE001
             logger.warning("エージェント %s がゲームサーバに接続できませんでした", name)
+            logger.warning(ex)
             logger.info("再接続を試みます")
             sleep(15)
 
