@@ -5,14 +5,17 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from utils import agent_util
-from utils.agent_log import AgentLog
 
 if TYPE_CHECKING:
     import configparser
 
+    from aiwolf_nlp_common.protocol.info import Info
+    from aiwolf_nlp_common.protocol.list.talk_list import TalkList
+    from aiwolf_nlp_common.protocol.list.whisper_list import WhisperList
+    from aiwolf_nlp_common.protocol.setting import Setting
     from aiwolf_nlp_common.role import Role
 
-    from utils.log_info import LogInfo
+    from utils.agent_log import AgentLog
 
 import random
 from threading import Thread
@@ -20,34 +23,36 @@ from typing import Callable
 
 from aiwolf_nlp_common import Action
 from aiwolf_nlp_common.protocol import Packet
+from aiwolf_nlp_common.role import RoleInfo
 
 
 class Agent:
     def __init__(
         self,
-        config: configparser.ConfigParser,
-        name: str,
-        log_info: LogInfo,
-        is_hand_over: bool = False,  # noqa: FBT001, FBT002
+        config: configparser.ConfigParser | None = None,
+        name: str | None = None,
+        agent_log: AgentLog | None = None,
     ) -> None:
-        self.name: str = name
+        self.name: str = name if name is not None else ""
+        self.index: int = -1
         self.received: list[str] = []
-        self.time_limit: int = 0
-        self.is_finish: bool = False
-        self.gameInfo = None
-        self.gameSetting = None
-        self.talkHistory = None
-        self.whisperHistory = None
-        self.request = None
-
-        if not is_hand_over:
-            self.logger = AgentLog(config=config, agent_name=name, log_info=log_info)
-
-        with Path.open(
-            Path(config.get("path", "random_talk")),
-            encoding="utf-8",
-        ) as f:
-            self.comments: list[str] = f.read().splitlines()
+        self.comments: list[str] = []
+        self.role: Role = RoleInfo.VILLAGER.value
+        self.action_timeout: int = 0
+        self.packet: Packet | None = None
+        self.info: Info | None = None
+        self.setting: Setting | None = None
+        self.talk_history: TalkList | None = None
+        self.whisper_history: WhisperList | None = None
+        self.agent_log = agent_log
+        self.alive_agents: list[str] = []
+        self.running: bool = True
+        if config is not None:
+            with Path.open(
+                Path(config.get("path", "random_talk")),
+                encoding="utf-8",
+            ) as f:
+                self.comments = f.read().splitlines()
 
     @staticmethod
     def timeout(func: Callable) -> Callable:
@@ -63,7 +68,10 @@ class Agent:
 
             thread = Thread(target=execute_with_timeout, daemon=True)
             thread.start()
-            thread.join(timeout=self.time_limit)
+            if self.action_timeout > 0:
+                thread.join(timeout=self.action_timeout)
+            else:
+                thread.join()
 
             if isinstance(res, Exception):
                 raise res
@@ -82,37 +90,51 @@ class Agent:
 
         return _wrapper
 
-    def parse_info(self, receive: str | list[str]) -> None:
-        if type(receive) is str:
-            self.received.append(receive)
-        elif type(receive) is list:
-            self.received.extend(receive)
+    def append_recv(self, recv: str | list[str]) -> None:
+        if type(recv) is str:
+            self.received.append(recv)
+        elif type(recv) is list:
+            self.received.extend(recv)
 
-    def get_info(self) -> None:
+    def set_packet(self) -> None:
         value = json.loads(self.received.pop(0))
-        if not hasattr(self, "protocol"):
-            self.protocol = Packet(
+        if self.packet is None:
+            self.packet = Packet(
                 value=value,
             )
         else:
-            self.protocol.update(value=value)
+            self.packet.update(value=value)
 
     def initialize(self) -> None:
-        if self.protocol.info is None or self.protocol.setting is None:
-            return
-        self.agent_name: str = self.protocol.info.agent
-        self.index: int = agent_util.agent_name_to_idx(name=self.agent_name)
+        if self.packet is not None:
+            self.info = self.packet.info
+            self.setting = self.packet.setting
 
-        self.time_limit: int = self.protocol.setting.action_timeout
-        self.role: Role = self.protocol.info.role_map.get_role(agent=self.agent_name)
+        if self.info is None or self.setting is None:
+            return
+        self.index = agent_util.agent_name_to_idx(name=self.info.agent)
+        self.action_timeout = self.setting.action_timeout
+        self.role = self.info.role_map.get_role(agent=self.info.agent)
 
     def daily_initialize(self) -> None:
-        if self.protocol.info is None:
+        if self.packet is not None:
+            self.info = self.packet.info
+            self.setting = self.packet.setting
+
+        if self.info is None or self.setting is None:
             return
-        self.alive: list = self.protocol.info.status_map.get_alive_agent_list()
+        self.alive_agents = self.info.status_map.get_alive_agent_list()
 
     def daily_finish(self) -> None:
-        pass
+        if self.packet is not None:
+            if self.talk_history is None:
+                self.talk_history = self.packet.talk_history
+            elif self.packet.talk_history is not None:
+                self.talk_history.extend(self.packet.talk_history)
+            if self.whisper_history is None:
+                self.whisper_history = self.packet.whisper_history
+            elif self.packet.whisper_history is not None:
+                self.whisper_history.extend(self.packet.whisper_history)
 
     @timeout
     def get_name(self) -> str:
@@ -124,71 +146,78 @@ class Agent:
 
     @timeout
     def talk(self) -> str:
-        comment: str = random.choice(self.comments)  # noqa: S311
-        self.logger.talk(comment=comment)
+        if self.packet is not None:
+            if self.talk_history is None:
+                self.talk_history = self.packet.talk_history
+            elif self.packet.talk_history is not None:
+                self.talk_history.extend(self.packet.talk_history)
+
+        comment = random.choice(self.comments)  # noqa: S311
+        if self.agent_log is not None:
+            self.agent_log.talk(comment=comment)
         return comment
 
     @timeout
     @send_agent_index
     def vote(self) -> int:
-        vote_target: int = agent_util.agent_name_to_idx(
-            name=random.choice(self.alive),  # noqa: S311
+        target: int = agent_util.agent_name_to_idx(
+            name=random.choice(self.alive_agents),  # noqa: S311
         )
-        self.logger.vote(vote_target=vote_target)
-        return vote_target
+        if self.agent_log is not None:
+            self.agent_log.vote(vote_target=target)
+        return target
 
     @timeout
     def whisper(self) -> None:
-        pass
+        if self.packet is not None:
+            if self.whisper_history is None:
+                self.whisper_history = self.packet.whisper_history
+            elif self.packet.whisper_history is not None:
+                self.whisper_history.extend(self.packet.whisper_history)
 
     def finish(self) -> None:
-        self.is_finish = True
-        if self.logger.is_write:
-            self.logger.close()
+        if self.packet is not None:
+            self.info = self.packet.info
+        self.running = False
 
-    def action(self) -> str:
-        if Action.is_initialize(request=self.protocol.request):
+        if self.agent_log is not None and self.agent_log.is_write:
+            self.agent_log.close()
+
+    def action(self) -> str:  # noqa: C901
+        if self.packet is None:
+            return ""
+        if Action.is_initialize(request=self.packet.request):
             self.initialize()
-        elif Action.is_name(request=self.protocol.request):
+        elif Action.is_name(request=self.packet.request):
             return self.get_name()
-        elif Action.is_role(request=self.protocol.request):
+        elif Action.is_role(request=self.packet.request):
             return self.get_role()
-        elif Action.is_daily_initialize(request=self.protocol.request):
+        elif Action.is_daily_initialize(request=self.packet.request):
             self.daily_initialize()
-        elif Action.is_daily_finish(request=self.protocol.request):
+        elif Action.is_daily_finish(request=self.packet.request):
             self.daily_finish()
-        elif Action.is_talk(request=self.protocol.request):
+        elif Action.is_talk(request=self.packet.request):
             return self.talk()
-        elif Action.is_vote(request=self.protocol.request):
+        elif Action.is_vote(request=self.packet.request):
             return self.vote()
-        elif Action.is_whisper(request=self.protocol.request):
+        elif Action.is_whisper(request=self.packet.request):
             self.whisper()
-        elif Action.is_finish(request=self.protocol.request):
+        elif Action.is_finish(request=self.packet.request):
             self.finish()
-
         return ""
 
-    def hand_over(self, new_agent: Agent) -> None:
-        new_agent.name = self.name
-        new_agent.received = self.received
-        new_agent.comments = self.comments
-        new_agent.logger = self.logger
-
-        if hasattr(self, "gameInfo"):
-            new_agent.gameInfo = self.gameInfo
-
-        if hasattr(self, "gameSetting"):
-            new_agent.gameSetting = self.gameSetting
-
-        if hasattr(self, "talkHistory"):
-            new_agent.talkHistory = self.talkHistory
-
-        if hasattr(self, "whisperHistory"):
-            new_agent.whisperHistory = self.whisperHistory
-
-        new_agent.request = self.protocol.request
-
-        new_agent.index = self.index
-        new_agent.role = self.role
-        new_agent.time_limit = self.time_limit
-        new_agent.time_limit = self.time_limit
+    def transfer_state(self, prev_agent: Agent) -> None:
+        self.name = prev_agent.name
+        self.index = prev_agent.index
+        self.received = prev_agent.received
+        self.comments = prev_agent.comments
+        self.role = prev_agent.role
+        self.action_timeout = prev_agent.action_timeout
+        self.packet = prev_agent.packet
+        self.info = prev_agent.info
+        self.setting = prev_agent.setting
+        self.talk_history = prev_agent.talk_history
+        self.whisper_history = prev_agent.whisper_history
+        self.agent_log = prev_agent.agent_log
+        self.alive_agents = prev_agent.alive_agents
+        self.running = prev_agent.running

@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from utils.agent_log import AgentLog
 from utils.log_info import LogInfo
 
 if TYPE_CHECKING:
@@ -48,21 +49,22 @@ def run_agent(
             logger.info("再接続を試みます")
             sleep(15)
 
-    agent = player.agent.Agent(config=config, name=name, log_info=log_info)
-    while not agent.is_finish:
+    agent = player.agent.Agent(
+        config=config,
+        name=name,
+        agent_log=AgentLog(config=config, agent_name=name, log_info=log_info),
+    )
+    while agent.running:
         if len(agent.received) == 0:
             receive = client.receive()
             if isinstance(receive, (str, list)):
-                agent.parse_info(receive=receive)
-        agent.get_info()
+                agent.append_recv(recv=receive)
+        agent.set_packet()
         req = agent.action()
-        if Action.is_initialize(request=agent.protocol.request):
-            agent = utils.agent_util.init_role(
-                agent=agent,
-                config=config,
-                name=name,
-                log_info=log_info,
-            )
+        if agent.packet is None:
+            continue
+        if Action.is_initialize(request=agent.packet.request):
+            agent = utils.agent_util.set_role(prev_agent=agent)
         if req != "":
             client.send(req=req)
 

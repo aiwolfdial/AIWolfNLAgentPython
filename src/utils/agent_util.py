@@ -1,50 +1,26 @@
-import configparser
 import re
 
 from aiwolf_nlp_common.role import RoleInfo
 
 import player
-from utils.log_info import LogInfo
 
 
-def init_role(
-    agent: player.agent.Agent,
-    config: configparser.ConfigParser,
-    name: str,
-    log_info: LogInfo,
+def set_role(
+    prev_agent: player.agent.Agent,
 ) -> player.agent.Agent:
-    if RoleInfo.is_villager(role=agent.role):
-        new_agent = player.villager.Villager(
-            config=config,
-            name=name,
-            log_info=log_info,
-            is_hand_over=True,
-        )
-    elif RoleInfo.is_werewolf(role=agent.role):
-        new_agent = player.werewolf.Werewolf(
-            config=config,
-            name=name,
-            log_info=log_info,
-            is_hand_over=True,
-        )
-    elif RoleInfo.is_seer(role=agent.role):
-        new_agent = player.seer.Seer(
-            config=config,
-            name=name,
-            log_info=log_info,
-            is_hand_over=True,
-        )
-    elif RoleInfo.is_possessed(role=agent.role):
-        new_agent = player.possessed.Possessed(
-            config=config,
-            name=name,
-            log_info=log_info,
-            is_hand_over=True,
-        )
+    agent: player.agent.Agent
+    if RoleInfo.is_villager(role=prev_agent.role):
+        agent = player.villager.Villager()
+    elif RoleInfo.is_werewolf(role=prev_agent.role):
+        agent = player.werewolf.Werewolf()
+    elif RoleInfo.is_seer(role=prev_agent.role):
+        agent = player.seer.Seer()
+    elif RoleInfo.is_possessed(role=prev_agent.role):
+        agent = player.possessed.Possessed()
     else:
-        raise ValueError(agent.role, "Role is not defined")
-    agent.hand_over(new_agent=new_agent)
-    return new_agent
+        raise ValueError(prev_agent.role, "Role is not defined")
+    agent.transfer_state(prev_agent=prev_agent)
+    return agent
 
 
 def agent_name_to_idx(name: str) -> int:
