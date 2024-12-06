@@ -52,13 +52,15 @@ class Seer(Agent):
     @Agent.send_agent_index
     def divine(self) -> int:
         target: int = agent_util.agent_name_to_idx(
-            name=random.choice(self.alive_agents),  # noqa: S311
+            name=random.choice(self.alive_agents()),  # noqa: S311
         )
         if self.agent_log is not None:
             self.agent_log.divine(divine_target=target)
         return target
 
     def action(self) -> str:
-        if self.packet is not None and Action.is_divine(request=self.packet.request):
-            return self.divine()
+        if self.packet is not None:
+            self.info = self.packet.info
+            if Action.is_divine(request=self.packet.request):
+                return self.divine()
         return super().action()

@@ -45,7 +45,6 @@ class Agent:
         self.talk_history: TalkList | None = None
         self.whisper_history: WhisperList | None = None
         self.agent_log = agent_log
-        self.alive_agents: list[str] = []
         self.running: bool = True
         if config is not None:
             with Path.open(
@@ -107,7 +106,6 @@ class Agent:
 
     def initialize(self) -> None:
         if self.packet is not None:
-            self.info = self.packet.info
             self.setting = self.packet.setting
 
         if self.info is None or self.setting is None:
@@ -118,12 +116,10 @@ class Agent:
 
     def daily_initialize(self) -> None:
         if self.packet is not None:
-            self.info = self.packet.info
             self.setting = self.packet.setting
 
         if self.info is None or self.setting is None:
             return
-        self.alive_agents = self.info.status_map.get_alive_agent_list()
 
     def daily_finish(self) -> None:
         if self.packet is not None:
@@ -161,7 +157,7 @@ class Agent:
     @send_agent_index
     def vote(self) -> int:
         target: int = agent_util.agent_name_to_idx(
-            name=random.choice(self.alive_agents),  # noqa: S311
+            name=random.choice(self.alive_agents()),  # noqa: S311
         )
         if self.agent_log is not None:
             self.agent_log.vote(vote_target=target)
@@ -176,8 +172,6 @@ class Agent:
                 self.whisper_history.extend(self.packet.whisper_history)
 
     def finish(self) -> None:
-        if self.packet is not None:
-            self.info = self.packet.info
         self.running = False
 
         if self.agent_log is not None and self.agent_log.is_write:
@@ -186,6 +180,7 @@ class Agent:
     def action(self) -> str:  # noqa: C901
         if self.packet is None:
             return ""
+        self.info = self.packet.info
         if Action.is_initialize(request=self.packet.request):
             self.initialize()
         elif Action.is_name(request=self.packet.request):
@@ -221,3 +216,8 @@ class Agent:
         self.agent_log = prev_agent.agent_log
         self.alive_agents = prev_agent.alive_agents
         self.running = prev_agent.running
+
+    def alive_agents(self) -> list[str]:
+        if self.info is None:
+            return []
+        return self.info.status_map.get_alive_agent_list()

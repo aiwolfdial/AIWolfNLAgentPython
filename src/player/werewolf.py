@@ -52,13 +52,15 @@ class Werewolf(Agent):
     @Agent.send_agent_index
     def attack(self) -> int:
         target: int = agent_util.agent_name_to_idx(
-            random.choice(self.alive_agents),  # noqa: S311
+            random.choice(self.alive_agents()),  # noqa: S311
         )
         if self.agent_log is not None:
             self.agent_log.attack(attack_target=target)
         return target
 
     def action(self) -> str:
-        if self.packet is not None and Action.is_attack(request=self.packet.request):
-            return self.attack()
+        if self.packet is not None:
+            self.info = self.packet.info
+            if Action.is_attack(request=self.packet.request):
+                return self.attack()
         return super().action()
