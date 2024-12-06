@@ -1,6 +1,6 @@
 [project]
 name = "aiwolf-nlp-agent"
-version = "0.2.1"
+version = "0.2.2"
 description = "aiwolf-nlp-agent"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
