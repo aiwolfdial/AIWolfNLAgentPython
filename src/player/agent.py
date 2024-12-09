@@ -55,8 +55,8 @@ class Agent:
 
     @staticmethod
     def timeout(func: Callable) -> Callable:
-        def _wrapper(self, *args, **kwargs) -> None:  # noqa: ANN001, ANN002, ANN003
-            res = None
+        def _wrapper(self, *args, **kwargs) -> str:  # noqa: ANN001, ANN002, ANN003
+            res = ""
 
             def execute_with_timeout() -> None:
                 nonlocal res
@@ -147,7 +147,6 @@ class Agent:
                 self.talk_history = self.packet.talk_history
             elif self.packet.talk_history is not None:
                 self.talk_history.extend(self.packet.talk_history)
-
         comment = random.choice(self.comments)  # noqa: S311
         if self.agent_log is not None:
             self.agent_log.talk(comment=comment)
