@@ -3,7 +3,7 @@ requires-python = ">=3.11"
 
 [[package]]
 name = "aiwolf-nlp-agent"
-version = "0.2.2"
+version = "0.2.3"
 source = { virtual = "." }
 dependencies = [
     { name = "aiwolf-nlp-common" },
